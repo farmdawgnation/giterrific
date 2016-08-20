@@ -62,20 +62,21 @@ object JGitWrappers {
     tryo(walker.addTree(id))
   }
 
-  def toCommitSummary(walker: RevWalk, skip: Int, maxCount: Int): Seq[RepositoryCommitSummary] = {
+  def toCommitSummary(walker: RevWalk, startCommit: RevCommit, skip: Int, maxCount: Int): Seq[RepositoryCommitSummary] = {
     val revFilter = AndRevFilter.create(
       SkipRevFilter.create(skip),
       MaxCountRevFilter.create(maxCount)
     )
 
+    walker.markStart(startCommit)
     walker.setRevFilter(revFilter)
 
-    for (commit <- walker.toSeq) yield {
+    for (commit <- walker.iterator().toSeq) yield {
       val author = commit.getAuthorIdent()
       val committer = commit.getCommitterIdent()
 
       RepositoryCommitSummary(
-        sha = commit.toObjectId.toString,
+        sha = commit.getName,
         author = RepositoryCommitIdentity(
           author.getWhen(),
           author.getName(),

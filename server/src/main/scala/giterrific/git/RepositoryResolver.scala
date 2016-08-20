@@ -17,11 +17,13 @@ object RepositoryResolver {
   type RepositoryHandler[T] = (Repository)=>Box[T]
 }
 
-case class FileSystemRepositoryResolver(rootPath: String) {
+case class FileSystemRepositoryResolver(rootPath: String) extends Loggable {
   def withRespositoryFor[T](id: String)(block: RepositoryResolver.RepositoryHandler[T]): Box[T] = {
+    logger.debug(s"Resolving repository $rootPath/$id")
     val compositeResult: Box[Box[T]] = for {
       fileHandle <- tryo(new File(s"$rootPath/$id")).filter(_.exists)
       createdRepository <- tryo(FileRepositoryBuilder.create(fileHandle))
+      _ = logger.debug(s"Resolution of $id successful.")
       blockResult <- tryo(block(createdRepository))
       _ = createdRepository.close()
     } yield {
@@ -30,9 +32,11 @@ case class FileSystemRepositoryResolver(rootPath: String) {
 
     compositeResult match {
       case Full(blockResult) =>
+        logger.trace(s"Resolver block returned: $blockResult")
         blockResult
 
       case forComprehensionFailure: EmptyBox =>
+        logger.debug(s"Issue locating repository: $forComprehensionFailure")
         forComprehensionFailure
     }
   }

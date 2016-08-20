@@ -4,7 +4,9 @@ package giterrific.git
  * A utility that transforms one identifier into another. This is
  * particularly useful for converting
  */
-sealed trait RepositoryIdentifierTransformer
+sealed trait RepositoryIdentifierTransformer {
+  def transform(input: String): String
+}
 
 /**
  * A transformer that generates a new identifier by prepending the prefix of the
@@ -15,6 +17,13 @@ case class PrefixedIdentifier(prefixLength: Int) extends RepositoryIdentifierTra
     val prefix = input.take(prefixLength) // Magic number-ish for the moment.
     s"$prefix/$input"
   }
+}
 
-  def unapply(input: String): String = transform(input)
+case object DotGitSuffixer extends RepositoryIdentifierTransformer {
+  def transform(input: String): String = s"$input.git"
+}
+
+case class ChainedTransformer(transformers: Seq[RepositoryIdentifierTransformer]) extends RepositoryIdentifierTransformer {
+  def transform(input: String): String =
+    transformers.foldLeft(input)((currentId, currentTransformer) => currentTransformer.transform(currentId))
 }

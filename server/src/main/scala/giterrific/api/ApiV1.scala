@@ -13,7 +13,7 @@ import net.liftweb.util._
 import net.liftweb.util.Helpers._
 
 object ApiV1 extends RestHelper {
-  val prefixer = PrefixedIdentifier(4)
+  val transformer = ChainedTransformer(Seq(PrefixedIdentifier(4), DotGitSuffixer))
   val repoRoot = Props.get("giterrific.repos.root").openOr("")
   val resolver = FileSystemRepositoryResolver(repoRoot)
 
@@ -23,23 +23,29 @@ object ApiV1 extends RestHelper {
         ("name" -> "giterrific") ~
         ("version" -> "0.1.0")
 
-      case "repos" :: id :: "commits" :: commitRef JsonGet req =>
-        resolver.withRespositoryFor(prefixer.transform(id)) { repo =>
+      case "repos" :: id :: "commits" :: commitRef :: Nil JsonGet req =>
+        println(transformer.transform(id))
+        resolver.withRespositoryFor(transformer.transform(id)) { repo =>
           withRevWalkFor(repo) { revwalk =>
             val skip: Int = S.param("skip").flatMap(asInt).openOr(0)
             val maxCount: Int = S.param("maxCount").flatMap(asInt).openOr(20)
 
-            Full(decompose(toCommitSummary(revwalk, skip, maxCount)))
+            for {
+              ref <- getRef(repo, commitRef)
+              commit <- getCommit(revwalk, ref)
+            } yield {
+              decompose(toCommitSummary(revwalk, commit, skip, maxCount))
+            }
           }
         }
 
       case "repos" :: id :: "commits" :: commitRef :: "tree" :: filePath JsonGet req =>
-        resolver.withRespositoryFor(prefixer.transform(id)) { repo =>
+        resolver.withRespositoryFor(transformer.transform(id)) { repo =>
           Full(("action" -> "list repo contents at commit and path"): JObject)
         }
 
       case "repos" :: id :: "commits" :: commitRef :: "contents" :: filePath JsonGet req =>
-        resolver.withRespositoryFor(prefixer.transform(id)) { repo =>
+        resolver.withRespositoryFor(transformer.transform(id)) { repo =>
           Full(("action" -> "display file contents at commit and path"): JObject)
         }
     }
