@@ -13,9 +13,6 @@ object ApiV1 extends RestHelper {
         ("name" -> "giterrific") ~
         ("version" -> "0.1.0")
 
-      case "repos" :: Nil JsonGet req =>
-        ("action" -> "list-repos"): JObject
-
       case "repos" :: id :: "commits" :: commitRef JsonGet req =>
         ("action" -> "list-repo-commits"): JObject
 
