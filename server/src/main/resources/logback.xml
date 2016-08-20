@@ -5,7 +5,7 @@
         </encoder>
     </appender>
 
-    <logger name="me.frmr.giterrific" level="info" />
+    <logger name="giterrific" level="debug" />
     <logger name="net.liftweb" level="warn" />
     <logger name="bootstrap.liftweb" level="info" />
 
