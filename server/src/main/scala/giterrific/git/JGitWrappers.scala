@@ -1,12 +1,15 @@
 package giterrific.git
 
 import java.lang.AutoCloseable
+import scala.collection.JavaConversions._
 
+import giterrific.core._
 import net.liftweb.common._
 import net.liftweb.util.Helpers._
 import org.eclipse.jgit.lib._
 import org.eclipse.jgit.treewalk._
 import org.eclipse.jgit.revwalk._
+import org.eclipse.jgit.revwalk.filter._
 
 /**
  * JGit's API is kind of ugly by Scala standards - so we'll wrap its functionality
@@ -57,5 +60,34 @@ object JGitWrappers {
 
   def addTree(walker: TreeWalk, id: AnyObjectId): Box[Int] = {
     tryo(walker.addTree(id))
+  }
+
+  def toCommitSummary(walker: RevWalk, skip: Int, maxCount: Int): Seq[RepositoryCommitSummary] = {
+    val revFilter = AndRevFilter.create(
+      SkipRevFilter.create(skip),
+      MaxCountRevFilter.create(maxCount)
+    )
+
+    walker.setRevFilter(revFilter)
+
+    for (commit <- walker.toSeq) yield {
+      val author = commit.getAuthorIdent()
+      val committer = commit.getCommitterIdent()
+
+      RepositoryCommitSummary(
+        sha = commit.toObjectId.toString,
+        author = RepositoryCommitIdentity(
+          author.getWhen(),
+          author.getName(),
+          author.getEmailAddress()
+        ),
+        committer = RepositoryCommitIdentity(
+          committer.getWhen(),
+          committer.getName(),
+          committer.getEmailAddress()
+        ),
+        message = commit.getFullMessage()
+      )
+    }
   }
 }
