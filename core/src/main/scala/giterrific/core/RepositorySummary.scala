@@ -1,4 +1,4 @@
-package me.frmr.giterrific.core
+package giterrific.core
 
 /**
  * A data structure providing a brief summary of a repository.
