@@ -24,7 +24,6 @@ object ApiV1 extends RestHelper {
         ("version" -> "0.1.0")
 
       case "repos" :: id :: "commits" :: commitRef :: Nil JsonGet req =>
-        println(transformer.transform(id))
         resolver.withRespositoryFor(transformer.transform(id)) { repo =>
           withRevWalkFor(repo) { revwalk =>
             val skip: Int = S.param("skip").flatMap(asInt).openOr(0)
