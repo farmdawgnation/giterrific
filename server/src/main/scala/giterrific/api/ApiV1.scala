@@ -2,12 +2,15 @@ package me.frmr.giterrific
 package api
 
 import giterrific.git._
+import giterrific.git.JGitWrappers._
 import net.liftweb.common._
 import net.liftweb.http._
 import net.liftweb.http.rest._
 import net.liftweb.json._
+import net.liftweb.json.Extraction._
 import net.liftweb.json.JsonDSL._
 import net.liftweb.util._
+import net.liftweb.util.Helpers._
 
 object ApiV1 extends RestHelper {
   val prefixer = PrefixedIdentifier(4)
@@ -22,7 +25,12 @@ object ApiV1 extends RestHelper {
 
       case "repos" :: id :: "commits" :: commitRef JsonGet req =>
         resolver.withRespositoryFor(prefixer.transform(id)) { repo =>
-          Full(("action" -> "list-repo-commits"): JObject)
+          withRevWalkFor(repo) { revwalk =>
+            val skip: Int = S.param("skip").flatMap(asInt).openOr(0)
+            val maxCount: Int = S.param("maxCount").flatMap(asInt).openOr(20)
+
+            Full(decompose(toCommitSummary(revwalk, skip, maxCount)))
+          }
         }
 
       case "repos" :: id :: "commits" :: commitRef :: "tree" :: filePath JsonGet req =>
