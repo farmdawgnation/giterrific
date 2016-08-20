@@ -1,0 +1,4 @@
+##
+# Basic settings for giterrific
+
+giterrific.repos.root="repos"
