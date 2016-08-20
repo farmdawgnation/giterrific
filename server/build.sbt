@@ -1,10 +1,10 @@
-name := "giterrific"
+name := "giterrific-server"
 
-version := "0.1.0"
+version := GiterrificKeys.version
 
-organization := "me.frmr"
+organization := "me.frmr.giterrific"
 
-scalaVersion := "2.11.7"
+scalaVersion := GiterrificKeys.primaryScalaVersion
 
 enablePlugins(JettyPlugin)
 
