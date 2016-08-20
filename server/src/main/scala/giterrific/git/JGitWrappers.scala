@@ -1,6 +1,7 @@
 package giterrific.git
 
 import java.lang.AutoCloseable
+import scala.collection._
 import scala.collection.JavaConversions._
 
 import giterrific.core._
@@ -28,6 +29,12 @@ object JGitWrappers {
     }
   }
 
+  private def withCloseable[C <: AutoCloseable, R](closeable: C)(block: (C)=>R): R = {
+    val result = block(closeable)
+    closeable.close()
+    result
+  }
+
   private def withWalkFor[W <: AutoCloseable, R](walkMaker: => W)(block: WrapperBlock[W, R]): Box[R] = {
     val compositeResult = for {
       walker <- tryo(walkMaker)
@@ -47,7 +54,7 @@ object JGitWrappers {
     withWalkFor[TreeWalk, R](new TreeWalk(repo))(block)
 
   def getRef(repo: Repository, commitIdentifier: String): Box[Ref] = {
-    tryo(repo.findRef(commitIdentifier))
+    flattenBoxes(tryo(Box.legacyNullTest(repo.findRef(commitIdentifier))))
   }
 
   def getCommit(walker: RevWalk, ref: Ref): Box[RevCommit] = {
@@ -89,6 +96,24 @@ object JGitWrappers {
         ),
         message = commit.getFullMessage()
       )
+    }
+  }
+
+  def toFileSummary(walker: TreeWalk): Seq[RepositoryFileSummary] = {
+    withCloseable(walker.getObjectReader()) { objectReader =>
+      var resultSeq = Seq[RepositoryFileSummary]()
+
+      while (walker.next()) {
+        resultSeq = resultSeq :+ RepositoryFileSummary(
+          sha = walker.getNameString(),
+          path = walker.getPathString(),
+          isDirectory = walker.isSubtree(),
+          mode = "", //walker.fileMode().getBits(),
+          size = 0
+        )
+      }
+
+      resultSeq
     }
   }
 }
