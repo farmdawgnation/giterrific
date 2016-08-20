@@ -19,7 +19,7 @@ object RepositoryResolver {
 
 case class FileSystemRepositoryResolver(rootPath: String) extends Loggable {
   def withRespositoryFor[T](id: String)(block: RepositoryResolver.RepositoryHandler[T]): Box[T] = {
-    logger.debug(s"Resolving repository $rootPath/$id")
+    logger.trace(s"Resolving repository $rootPath/$id")
     val compositeResult: Box[Box[T]] = for {
       fileHandle <- tryo(new File(s"$rootPath/$id")).filter(_.exists)
       createdRepository <- tryo(FileRepositoryBuilder.create(fileHandle))
