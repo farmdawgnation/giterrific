@@ -47,8 +47,9 @@ object ApiV1 extends RestHelper {
                 commit <- getCommit(revWalk, ref)
                 commitTree = getCommitTree(commit)
                 _ <- addTree(treeWalk, commitTree)
+                _ = filterTreeByPath(treeWalk, filePath)
               } yield {
-                decompose(toFileSummary(treeWalk))
+                decompose(toFileSummary(treeWalk, filePath.length))
               }
             }
           }

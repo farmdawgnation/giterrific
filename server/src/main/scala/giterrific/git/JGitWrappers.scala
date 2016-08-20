@@ -9,6 +9,7 @@ import net.liftweb.common._
 import net.liftweb.util.Helpers._
 import org.eclipse.jgit.lib._
 import org.eclipse.jgit.treewalk._
+import org.eclipse.jgit.treewalk.filter._
 import org.eclipse.jgit.revwalk._
 import org.eclipse.jgit.revwalk.filter._
 
@@ -69,6 +70,15 @@ object JGitWrappers {
     tryo(walker.addTree(id))
   }
 
+  def filterTreeByPath(walker: TreeWalk, path: Seq[String]): Unit = {
+    for(pathPart <- path) {
+      walker.setFilter(PathFilter.create(pathPart))
+      walker.next()
+      walker.setFilter(null)
+      walker.enterSubtree()
+    }
+  }
+
   def toCommitSummary(walker: RevWalk, startCommit: RevCommit, skip: Int, maxCount: Int): Seq[RepositoryCommitSummary] = {
     val revFilter = AndRevFilter.create(
       SkipRevFilter.create(skip),
@@ -99,11 +109,13 @@ object JGitWrappers {
     }
   }
 
-  def toFileSummary(walker: TreeWalk): Seq[RepositoryFileSummary] = {
+  def toFileSummary(walker: TreeWalk, expectedDepth: Int): Seq[RepositoryFileSummary] = {
     withCloseable(walker.getObjectReader()) { objectReader =>
       var resultSeq = Seq[RepositoryFileSummary]()
 
-      while (walker.next()) {
+      while (walker.next() && walker.getDepth() == expectedDepth) {
+        val currentObjectId = walker.getObjectId(0)
+
         resultSeq = resultSeq :+ RepositoryFileSummary(
           sha = walker.getNameString(),
           path = walker.getPathString(),
