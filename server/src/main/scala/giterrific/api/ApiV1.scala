@@ -1,4 +1,4 @@
-package me.frmr.giterrific
+package giterrific
 package api
 
 import giterrific.git._

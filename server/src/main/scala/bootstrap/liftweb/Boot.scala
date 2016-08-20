@@ -11,6 +11,8 @@ import Loc._
 import net.liftmodules.JQueryModule
 import net.liftweb.http.js.jquery._
 
+import giterrific.api.ApiV1
+
 /**
  * A class that's instantiated early and run.  It allows the application
  * to modify lift's environment
@@ -29,6 +31,9 @@ class Boot {
 
     // Force the request to be UTF-8
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
+
+    // Add the api
+    LiftRules.statelessDispatch.append(ApiV1)
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts
