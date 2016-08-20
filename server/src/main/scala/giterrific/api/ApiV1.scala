@@ -57,7 +57,20 @@ object ApiV1 extends RestHelper {
 
       case "repos" :: id :: "commits" :: commitRef :: "contents" :: filePath JsonGet req =>
         resolver.withRespositoryFor(transformer.transform(id)) { repo =>
-          Full(("action" -> "display file contents at commit and path"): JObject)
+          withRevWalkFor(repo) { revWalk =>
+            withTreeWalkFor(repo) { treeWalk =>
+              for {
+                ref <- getRef(repo, commitRef)
+                commit <- getCommit(revWalk, ref)
+                commitTree = getCommitTree(commit)
+                _ <- addTree(treeWalk, commitTree)
+                _ = filterTreeByPath(treeWalk, filePath)
+                contents <- toFileContent(treeWalk)
+              } yield {
+                decompose(contents)
+              }
+            }
+          }
         }
     }
   }

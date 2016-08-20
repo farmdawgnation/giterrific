@@ -128,4 +128,22 @@ object JGitWrappers {
       resultSeq
     }
   }
+
+  def toFileContent(walker: TreeWalk): Box[RepositoryFileContent] = {
+    withCloseable(walker.getObjectReader()) { objectReader =>
+      val currentObjectId = walker.getObjectId(0)
+
+      tryo(objectReader.open(currentObjectId)).flatMap { objectLoader =>
+        val bytesOfObject = objectLoader.getCachedBytes()
+        val base64OfObject = base64Encode(bytesOfObject)
+
+        Full(RepositoryFileContent(
+          sha = walker.getNameString(),
+          content = base64OfObject,
+          encoding = "base64",
+          size = objectLoader.getSize()
+        ))
+      }
+    }
+  }
 }
