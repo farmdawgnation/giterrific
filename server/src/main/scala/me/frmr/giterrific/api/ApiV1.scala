@@ -19,8 +19,11 @@ object ApiV1 extends RestHelper {
       case "repos" :: id :: "commits" :: commitRef JsonGet req =>
         ("action" -> "list-repo-commits"): JObject
 
-      case "repos" :: id :: "commits" :: commitRef :: "contents" :: filePath JsonGet req =>
+      case "repos" :: id :: "commits" :: commitRef :: "tree" :: filePath JsonGet req =>
         ("action" -> "list repo contents at commit and path"): JObject
+
+      case "repos" :: id :: "commits" :: commitRef :: "contents" :: filePath JsonGet req =>
+        ("action" -> "display file contents at commit and path"): JObject
     }
   }
 }
