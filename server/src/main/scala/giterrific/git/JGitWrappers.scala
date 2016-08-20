@@ -120,8 +120,8 @@ object JGitWrappers {
           sha = walker.getNameString(),
           path = walker.getPathString(),
           isDirectory = walker.isSubtree(),
-          mode = "", //walker.fileMode().getBits(),
-          size = 0
+          mode = walker.getFileMode().toString,
+          size = objectReader.getObjectSize(currentObjectId, ObjectReader.OBJ_ANY)
         )
       }
 
