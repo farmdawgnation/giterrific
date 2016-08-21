@@ -12,7 +12,7 @@ import net.liftweb.json.JsonDSL._
 import net.liftweb.util._
 import net.liftweb.util.Helpers._
 
-object ApiV1 extends RestHelper {
+object ApiV1 extends RestHelper with Loggable {
   val transformer = ChainedTransformer(Seq(PrefixedIdentifier(4), DotGitSuffixer))
   val repoRoot = Props.get("giterrific.repos.root").openOr("")
   val resolver = FileSystemRepositoryResolver(repoRoot)
@@ -64,7 +64,17 @@ object ApiV1 extends RestHelper {
                 commit <- getCommit(revWalk, ref)
                 commitTree = getCommitTree(commit)
                 _ <- addTree(treeWalk, commitTree)
-                _ = filterTreeByPath(treeWalk, filePath)
+
+                // Lift's RestHelper typically uses the suffix of a file name to let the client
+                // indicate what type of response it would like to receive. The "filePath" above
+                // won't have the file extension on the last item as a result. So we retrieve the
+                // entire path from the request itself and drop the prefix.
+                wholePath = req.path.wholePath.drop(5)
+                parentDirectory = filePath.dropRight(1)
+                fileName <- wholePath.takeRight(1).headOption
+
+                _ = filterTreeByPath(treeWalk, parentDirectory)
+                _ = filterTreeToFile(treeWalk, fileName)
                 contents <- toFileContent(treeWalk)
               } yield {
                 decompose(contents)

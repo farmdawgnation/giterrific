@@ -71,12 +71,17 @@ object JGitWrappers {
   }
 
   def filterTreeByPath(walker: TreeWalk, path: Seq[String]): Unit = {
-    for(pathPart <- path) {
+    for (pathPart <- path) {
       walker.setFilter(PathFilter.create(pathPart))
       walker.next()
       walker.setFilter(null)
       walker.enterSubtree()
     }
+  }
+
+  def filterTreeToFile(walker: TreeWalk, file: String): Unit = {
+    walker.setFilter(PathFilter.create(file))
+    walker.next()
   }
 
   def toCommitSummary(walker: RevWalk, startCommit: RevCommit, skip: Int, maxCount: Int): Seq[RepositoryCommitSummary] = {
