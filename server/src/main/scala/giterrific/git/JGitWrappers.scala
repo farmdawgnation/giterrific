@@ -192,7 +192,7 @@ object JGitWrappers {
         val currentObjectId = walker.getObjectId(0)
 
         resultSeq = resultSeq :+ RepositoryFileSummary(
-          sha = walker.getNameString(),
+          name = walker.getNameString(),
           path = walker.getPathString(),
           isDirectory = walker.isSubtree(),
           mode = walker.getFileMode().toString,
@@ -225,7 +225,7 @@ object JGitWrappers {
             base64OfObject = base64Encode(bytesOfObject)
           } yield {
             RepositoryFileContent(
-              sha = walker.getNameString(),
+              name = walker.getNameString(),
               content = base64OfObject,
               encoding = "base64",
               size = objectLoader.getSize()
