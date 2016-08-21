@@ -47,7 +47,7 @@ object ApiV1 extends RestHelper with Loggable {
                 commit <- getCommit(revWalk, ref)
                 commitTree = getCommitTree(commit)
                 _ <- addTree(treeWalk, commitTree)
-                _ = filterTreeByPath(treeWalk, filePath)
+                _ = navigateTreeToPath(treeWalk, filePath)
               } yield {
                 decompose(toFileSummary(treeWalk, filePath.length))
               }
@@ -73,7 +73,7 @@ object ApiV1 extends RestHelper with Loggable {
                 parentDirectory = filePath.dropRight(1)
                 fileName <- wholePath.takeRight(1).headOption
 
-                _ = filterTreeByPath(treeWalk, parentDirectory)
+                _ = navigateTreeToPath(treeWalk, parentDirectory)
                 _ = filterTreeToFile(treeWalk, fileName)
                 contents <- toFileContent(treeWalk)
               } yield {
