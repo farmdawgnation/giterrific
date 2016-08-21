@@ -6,9 +6,15 @@ version := GiterrificKeys.version
 
 organization := "me.frmr.giterrific"
 
+maintainer := "Matt Farmer <matt@frmr.me>"
+
+packageSummary := "A lightweight JSON API for git repository servers."
+
+packageDescription := "Giterrific surfaces information about your git repositories in a JSON API."
+
 scalaVersion := GiterrificKeys.primaryScalaVersion
 
-enablePlugins(JettyPlugin)
+enablePlugins(JettyPlugin, JavaServerAppPackaging, JDebPackaging, DockerPlugin)
 
 resolvers ++= Seq("snapshots"     at "https://oss.sonatype.org/content/repositories/snapshots",
                 "releases"        at "https://oss.sonatype.org/content/repositories/releases")
@@ -50,8 +56,27 @@ addWebResources := Process(s"zip -r scala-2.11/${name.value}-${version.value}.ja
 
 lazy val assembledJar = taskKey[Int]("Build the fully assembled JAR including web resources")
 
-assembledJar := Def.sequential(
+val assembledJarTask = assembledJar := Def.sequential(
   (assembly in assembly).toTask(x => x),
   Keys.`package`,
   addWebResources
 ).value
+
+// removes all jar mappings in universal and appends the fat jar
+mappings in Universal := {
+    // universalMappings: Seq[(File,String)]
+    val universalMappings = (mappings in Universal).value
+    val fatJar = (assembly in Compile).value
+    (addWebResources in Compile).value
+
+    // removing means filtering
+    val filtered = universalMappings filter {
+        case (file, name) =>  ! name.endsWith(".jar")
+    }
+
+    // add the fat jar
+    filtered :+ (fatJar -> ("lib/" + fatJar.getName))
+}
+
+// the bash scripts classpath only needs the fat jar
+scriptClasspath := Seq( (jarName in assembly).value )
