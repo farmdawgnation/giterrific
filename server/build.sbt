@@ -51,7 +51,7 @@ addWebResources := Process(s"zip -r scala-2.11/${name.value}-${version.value}.ja
 lazy val assembledJar = taskKey[Int]("Build the fully assembled JAR including web resources")
 
 assembledJar := Def.sequential(
-  Keys.`package`,
   (assembly in assembly).toTask(x => x),
+  Keys.`package`,
   addWebResources
 ).value

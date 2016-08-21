@@ -1,16 +1,23 @@
 package giterrific.jetty
 
 import java.io.File
+import java.util.Date
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.webapp.WebAppContext
-import net.liftweb.util.Props
+import net.liftweb.common.Box
+import net.liftweb.util.Helpers.asInt
 
 import sun.misc.Signal
 import sun.misc.SignalHandler
 
 object Run {
+  private def logMessage(message: String) = {
+    println(s"[BOOT ${new Date()}] $message")
+  }
+
   def main(args: Array[String]): Unit = {
-    println("Starting Jetty...")
+    logMessage("Welcome to Giterrific! Starting Jetty...")
+
     // Register the signal handler for USR2, which triggers a reload.
     Signal.handle(new Signal("USR2"), new SignalHandler {
       def handle(signal:Signal) {
@@ -28,20 +35,17 @@ object Run {
      else propsDir + "/" + fileNameTail
     }
     /* set logback config file appropriately */
-    println(s"Using logback file at $logbackConfFile...")
+    logMessage(s"Setting logback configuration to $logbackConfFile...")
     System.setProperty("logback.configurationFile", logbackConfFile)
 
     /* choose different port for each of your webapps deployed on single server
      * you may use it in nginx proxy-pass directive, to target virtual hosts */
-    val portNumber = 8080
-    println(s"Binding port $portNumber")
-    val port = Props.getInt("port", portNumber)
+    val portNumber: Int = Box.legacyNullTest(System.getProperty("port")).flatMap(asInt).openOr(8080)
+    logMessage(s"Configured port is $portNumber")
 
-    val server = new Server(port)
-    val domain = Run.getClass.getProtectionDomain
-    val location = domain.getCodeSource.getLocation
-
+    val server = new Server(portNumber)
     val webapp = new WebAppContext
+
     webapp.setServer(server)
     webapp.setContextPath("/")
 
@@ -64,14 +68,10 @@ object Run {
     //webapp.setDescriptor(location.toExternalForm() + "/webapp/WEB-INF/web.xml")
 
     webapp.setServer(server)
-
-    // (Optional) Set the directory the war will extract to.
-    // If not set, java.io.tmpdir will be used, which can cause problems
-    // if the temp directory gets cleaned periodically.
-    // Your build scripts should remove this directory between deployments
-    //webapp.setTempDirectory(new File("./extract"))
-
     server.setHandler(webapp)
+
+    logMessage("Booting up giterrific Lift application...")
+
     server.start
     server.join
   }
