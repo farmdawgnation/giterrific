@@ -8,6 +8,8 @@ import common._
 import http._
 import sitemap._
 import Loc._
+import json._
+import json.JsonDSL._
 import net.liftmodules.JQueryModule
 import net.liftweb.http.js.jquery._
 
@@ -34,6 +36,19 @@ class Boot {
 
     // Add the api
     LiftRules.statelessDispatch.append(ApiV1)
+
+    // Custom 404 behavior
+    LiftRules.uriNotFound.prepend {
+      case (req, _) if req.acceptsJson_? && ! req.acceptsStarStar =>
+        NotFoundAsResponse(
+          JsonResponse(("error" -> "The resource you were looking for could not be found."): JObject, Nil, Nil, 404)
+        )
+
+      case (req, _) =>
+        NotFoundAsResponse(
+          PlainTextResponse("The resource you were looking for could not be found.\n", Nil, 404)
+        )
+    }
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts
