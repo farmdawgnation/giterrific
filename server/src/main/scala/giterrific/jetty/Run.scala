@@ -1,4 +1,4 @@
-package bootstrap
+package giterrific.jetty
 
 import java.io.File
 import org.eclipse.jetty.server.Server
@@ -8,8 +8,9 @@ import net.liftweb.util.Props
 import sun.misc.Signal
 import sun.misc.SignalHandler
 
-object Start {
+object Run {
   def main(args: Array[String]): Unit = {
+    println("Starting Jetty...")
     // Register the signal handler for USR2, which triggers a reload.
     Signal.handle(new Signal("USR2"), new SignalHandler {
       def handle(signal:Signal) {
@@ -27,14 +28,17 @@ object Start {
      else propsDir + "/" + fileNameTail
     }
     /* set logback config file appropriately */
+    println(s"Using logback file at $logbackConfFile...")
     System.setProperty("logback.configurationFile", logbackConfFile)
 
     /* choose different port for each of your webapps deployed on single server
      * you may use it in nginx proxy-pass directive, to target virtual hosts */
-    val port = Props.getInt("port", 8090)
+    val portNumber = 8080
+    println(s"Binding port $portNumber")
+    val port = Props.getInt("port", portNumber)
 
     val server = new Server(port)
-    val domain = Start.getClass.getProtectionDomain
+    val domain = Run.getClass.getProtectionDomain
     val location = domain.getCodeSource.getLocation
 
     val webapp = new WebAppContext
@@ -43,9 +47,9 @@ object Start {
 
     /* use embeded webapp dir as source of the web content -> webapp
      * this is the dir within jar where we have put stuff with zip.
-     * it was in a directory created by package-war, in target (also
+     * it was in a directory created by package, in target (also
      * named webapp), which was outside the jar. now, thanks to zip
-     * it's inside so we need to use method bellow to get to it.
+     * it's inside so we need to use method below to get to it.
      * web.xml is in default location, of that embedded webapp dir,
      * so we don't have do webctx.setDescriptor */
     val webappDirInsideJar = webapp.getClass.getClassLoader.getResource("webapp").toExternalForm
@@ -60,7 +64,6 @@ object Start {
     //webapp.setDescriptor(location.toExternalForm() + "/webapp/WEB-INF/web.xml")
 
     webapp.setServer(server)
-    //webapp.setWar(location.toExternalForm())
 
     // (Optional) Set the directory the war will extract to.
     // If not set, java.io.tmpdir will be used, which can cause problems
