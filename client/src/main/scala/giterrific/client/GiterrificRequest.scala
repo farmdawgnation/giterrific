@@ -72,11 +72,12 @@ class GiterrificRequester(
     }
   }
 
-  def getContent(): Future[RepositoryFileContent] = {
+  def getContents(): Future[RepositoryFileContent] = {
     if (path.isEmpty) {
       Future.failed(new IllegalStateException("You can only request content if a path is specified."))
     } else {
-      val contentRequestBuilder = baseRequestBuilder / "content" / path.getOrElse("")
+      val contentRequestBuilder = baseRequestBuilder / "contents" / path.getOrElse("") <:<
+        Map("Content-Type" -> "application/json", "Accept" -> "application/json")
 
       Http(contentRequestBuilder OK as.String).map { response =>
         parse(response).extract[RepositoryFileContent]
