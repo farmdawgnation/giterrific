@@ -43,7 +43,7 @@ class GiterrificRequester(
   path: Option[String]
 )(implicit ec: ExecutionContext) {
   implicit val formats = DefaultFormats
-  val baseRequestBuilder = url(baseUrl) / "repos" / repoName / "commits" / refName
+  val baseRequestBuilder = url(baseUrl) / "api" / "v1" / "repos" / repoName / "commits" / refName
 
   def withPath(path: String): GiterrificRequester = {
     new GiterrificRequester(
@@ -54,21 +54,21 @@ class GiterrificRequester(
     )
   }
 
-  def getCommits(skip: Int = 0, maxCount: Int = 20): Future[RepositoryCommitSummary] = {
+  def getCommits(skip: Int = 0, maxCount: Int = 20): Future[List[RepositoryCommitSummary]] = {
     Http(baseRequestBuilder OK as.String).map { response =>
-      parse(response).extract[RepositoryCommitSummary]
+      parse(response).extract[List[RepositoryCommitSummary]]
     }
   }
 
-  def getTree(): Future[RepositoryFileSummary] = {
+  def getTree(): Future[List[RepositoryFileSummary]] = {
     val treeRequestBuilder = if (path.isEmpty) {
       baseRequestBuilder / "tree"
     } else {
-      baseRequestBuilder / "tree" / path.mkString("/")
+      baseRequestBuilder / "tree" / path.getOrElse("")
     }
 
     Http(treeRequestBuilder OK as.String).map { response =>
-      parse(response).extract[RepositoryFileSummary]
+      parse(response).extract[List[RepositoryFileSummary]]
     }
   }
 
@@ -76,7 +76,7 @@ class GiterrificRequester(
     if (path.isEmpty) {
       Future.failed(new IllegalStateException("You can only request content if a path is specified."))
     } else {
-      val contentRequestBuilder = baseRequestBuilder / "content" / path.mkString("/")
+      val contentRequestBuilder = baseRequestBuilder / "content" / path.getOrElse("")
 
       Http(contentRequestBuilder OK as.String).map { response =>
         parse(response).extract[RepositoryFileContent]
