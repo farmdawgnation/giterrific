@@ -1,6 +1,6 @@
 # Giterrific
 
-_A JSON API for private git servers._
+_A lightweight JSON API for private git servers._
 
 Giterrific is a solution to a very silly problem: there doesn't exists (in as far as I could find)
 a minimalist JSON API microservice that would surface information about git repositories in a sane
