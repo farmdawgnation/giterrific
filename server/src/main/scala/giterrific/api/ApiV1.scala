@@ -14,7 +14,11 @@ import net.liftweb.util.Helpers._
 
 object ApiV1 extends RestHelper with Loggable {
   val transformer = ChainedTransformer(Seq(PrefixedIdentifier(4), DotGitSuffixer))
-  val repoRoot = Props.get("giterrific.repos.root").openOr("")
+  val repoRoot = {
+    Box.legacyNullTest(System.getProperty("giterrific.repos.root")).or(
+      Props.get("giterrific.repos.root")
+    ).openOr("repos")
+  }
   val resolver = FileSystemRepositoryResolver(repoRoot)
 
   serve {
