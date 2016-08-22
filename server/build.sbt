@@ -16,6 +16,8 @@ scalaVersion := GiterrificKeys.primaryScalaVersion
 
 enablePlugins(JettyPlugin, JavaServerAppPackaging, JDebPackaging, DockerPlugin)
 
+packageName in Docker := "farmdawgnation/giterrific"
+
 resolvers ++= Seq("snapshots"     at "https://oss.sonatype.org/content/repositories/snapshots",
                 "releases"        at "https://oss.sonatype.org/content/repositories/releases")
 
