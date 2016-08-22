@@ -12,6 +12,8 @@ import json._
 import json.JsonDSL._
 import net.liftmodules.JQueryModule
 import net.liftweb.http.js.jquery._
+import net.liftweb.util._
+import net.liftweb.util.Helpers._
 
 import giterrific.api.ApiV1
 
@@ -19,16 +21,16 @@ import giterrific.api.ApiV1
  * A class that's instantiated early and run.  It allows the application
  * to modify lift's environment
  */
-class Boot {
+class Boot extends Loggable {
   def boot {
+    // Booting!
+    logger.info(s"Booting Giterrific in ${Props.mode} mode.")
+
     // where to search snippet
     LiftRules.addToPackages("giterrific")
 
     // Build SiteMap
-    val entries = List(
-      Menu.i("Home") / "index" // the simple way to declare a menu
-    )
-
+    val entries = List(Menu.i("Home") / "index")
     LiftRules.setSiteMap(SiteMap(entries:_*))
 
     // Force the request to be UTF-8
@@ -56,12 +58,12 @@ class Boot {
     JQueryModule.init()
 
     LiftRules.securityRules = () => {
-      SecurityRules(content = Some(ContentSecurityPolicy(
-        scriptSources = List(
-            ContentSourceRestriction.Self),
-        styleSources = List(
-            ContentSourceRestriction.Self)
-            )))
+      SecurityRules(
+        content = Some(ContentSecurityPolicy(
+          scriptSources = List(ContentSourceRestriction.Self),
+          styleSources = List(ContentSourceRestriction.Self)
+        ))
+      )
     }
   }
 }
