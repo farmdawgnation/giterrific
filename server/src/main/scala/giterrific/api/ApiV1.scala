@@ -96,7 +96,7 @@ object ApiV1 extends RestHelper with Loggable {
             }
           }
 
-        case "repos" :: id :: "commits" :: commitRef :: "contents" :: filePath JsonGet req => repo =>
+        case "commits" :: commitRef :: "contents" :: filePath JsonGet req => repo =>
           withRevWalkFor(repo) { revWalk =>
             withTreeWalkFor(repo) { treeWalk =>
               for {
