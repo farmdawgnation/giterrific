@@ -34,6 +34,10 @@ object RepositoryResolver {
 }
 
 case class FileSystemRepositoryResolver(rootPath: String) extends Loggable {
+  def exists(path: String): Boolean = {
+    new File(s"$rootPath/$path").exists()
+  }
+
   def withRespositoryFor[T](id: String)(block: RepositoryResolver.RepositoryHandler[T]): Box[T] = {
     logger.trace(s"Resolving repository $rootPath/$id")
     val compositeResult: Box[Box[T]] = for {
