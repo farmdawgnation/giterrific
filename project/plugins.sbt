@@ -1,3 +1,6 @@
+// PGP plugin
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.0")
+
 //Enable the sbt web plugin
 addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "2.1.0")
 
