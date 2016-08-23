@@ -21,6 +21,7 @@ import giterrific.git._
 import giterrific.git.JGitWrappers._
 import net.liftweb.common._
 import net.liftweb.http._
+import net.liftweb.http.LiftRules.DispatchPF
 import net.liftweb.http.rest._
 import net.liftweb.json._
 import net.liftweb.json.Extraction._
@@ -29,6 +30,9 @@ import net.liftweb.util._
 import net.liftweb.util.Helpers._
 import org.eclipse.jgit.lib._
 
+/**
+ * The V1 API for Giterrific. Exposes all the repository information as JSON!
+ */
 object ApiV1 extends RestHelper with Loggable {
   val repoRoot = {
     Box.legacyNullTest(System.getProperty("giterrific.repos.root")).or(
@@ -36,34 +40,6 @@ object ApiV1 extends RestHelper with Loggable {
     ).openOr("repos")
   }
   val resolver = FileSystemRepositoryResolver(repoRoot)
-
-  def withRepository(pf: PartialFunction[Req, (Repository) => () => Box[LiftResponse]]): PartialFunction[Req, () => Box[LiftResponse]] = {
-    new PartialFunction[Req, () => Box[LiftResponse]] {
-      def isDefinedAt(req: Req): Boolean = {
-        val gitRepoName = req.path.partPath.find(_.endsWith(".git")).getOrElse("")
-        val gitRepoIndex = req.path.partPath.indexOf(gitRepoName)
-        val gitRepoPath = req.path.partPath.slice(0, gitRepoIndex+1)
-        resolver.exists(gitRepoPath.mkString("/")) && pf.isDefinedAt(req.withNewPath(req.path.drop(gitRepoPath.length)))
-      }
-
-      def apply(req: Req): ()=>Box[LiftResponse] = {
-        val gitRepoName = req.path.partPath.find(_.endsWith(".git")).getOrElse("")
-        val gitRepoIndex = req.path.partPath.indexOf(gitRepoName)
-        val gitRepoPath = req.path.partPath.slice(0, gitRepoIndex+1)
-
-        val result = resolver.withRespositoryFor(gitRepoPath.mkString("/")) { repo =>
-          Full(pf.apply(req.withNewPath(req.path.drop(gitRepoPath.length))).apply(repo))
-        }
-
-        result match {
-          case Full(innerResult) =>
-            innerResult
-          case o: EmptyBox =>
-            () => o
-        }
-      }
-    }
-  }
 
   serve {
     "api" / "v1" / "repos" prefix {
@@ -121,6 +97,50 @@ object ApiV1 extends RestHelper with Loggable {
               }
             }
           }
+      }
+    }
+  }
+
+  /**
+   * Similar to Lift's DispatchPF, but the result type takes in a git repository and returns a
+   * () => Box[LiftResponse].
+   */
+  type RepoDispatchPF = PartialFunction[Req, (Repository) => () => Box[LiftResponse]]
+
+  /**
+   * Execute a REST request with an identified repository.
+   *
+   * Thie method will automatically identify what part of the incoming request refers to the git
+   * repository and then execute the partial function nested within it in the context of that
+   * repository. The partial function passed in will need to accept the instantiated repository
+   * as an argument.
+   */
+  private def withRepository(pf: RepoDispatchPF): DispatchPF = {
+    new PartialFunction[Req, () => Box[LiftResponse]] {
+      private def calculateGitRepoPath(req: Req) = {
+        val gitRepoName = req.path.partPath.find(_.endsWith(".git")).getOrElse("")
+        val gitRepoIndex = req.path.partPath.indexOf(gitRepoName)
+        req.path.partPath.slice(0, gitRepoIndex+1)
+      }
+
+      def isDefinedAt(req: Req): Boolean = {
+        val gitRepoPath = calculateGitRepoPath(req)
+
+        resolver.exists(gitRepoPath.mkString("/")) &&
+          pf.isDefinedAt(req.withNewPath(req.path.drop(gitRepoPath.length)))
+      }
+
+      def apply(req: Req): ()=>Box[LiftResponse] = {
+        val gitRepoPath = calculateGitRepoPath(req)
+
+        val result = resolver.withRespositoryFor(gitRepoPath.mkString("/")) { repo =>
+          Full(pf.apply(req.withNewPath(req.path.drop(gitRepoPath.length))).apply(repo))
+        }
+
+        result match {
+          case Full(innerResult) => innerResult
+          case errorBox: EmptyBox => () => errorBox
+        }
       }
     }
   }
