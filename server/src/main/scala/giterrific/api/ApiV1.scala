@@ -27,9 +27,9 @@ import net.liftweb.json.Extraction._
 import net.liftweb.json.JsonDSL._
 import net.liftweb.util._
 import net.liftweb.util.Helpers._
+import org.eclipse.jgit.lib._
 
 object ApiV1 extends RestHelper with Loggable {
-  val transformer = ChainedTransformer(Seq(PrefixedIdentifier(4), DotGitSuffixer))
   val repoRoot = {
     Box.legacyNullTest(System.getProperty("giterrific.repos.root")).or(
       Props.get("giterrific.repos.root")
@@ -37,14 +37,38 @@ object ApiV1 extends RestHelper with Loggable {
   }
   val resolver = FileSystemRepositoryResolver(repoRoot)
 
-  serve {
-    "api" / "v1" prefix {
-      case "version" :: Nil JsonGet req =>
-        ("name" -> "giterrific") ~
-        ("version" -> "0.1.0")
+  def withRepository(pf: PartialFunction[Req, (Repository) => () => Box[LiftResponse]]): PartialFunction[Req, () => Box[LiftResponse]] = {
+    new PartialFunction[Req, () => Box[LiftResponse]] {
+      def isDefinedAt(req: Req): Boolean = {
+        val gitRepoName = req.path.partPath.find(_.endsWith(".git")).getOrElse("")
+        val gitRepoIndex = req.path.partPath.indexOf(gitRepoName)
+        val gitRepoPath = req.path.partPath.slice(0, gitRepoIndex+1)
+        resolver.exists(gitRepoPath.mkString("/")) && pf.isDefinedAt(req.withNewPath(req.path.drop(gitRepoPath.length)))
+      }
 
-      case "repos" :: id :: "commits" :: commitRef :: Nil JsonGet req =>
-        resolver.withRespositoryFor(transformer.transform(id)) { repo =>
+      def apply(req: Req): ()=>Box[LiftResponse] = {
+        val gitRepoName = req.path.partPath.find(_.endsWith(".git")).getOrElse("")
+        val gitRepoIndex = req.path.partPath.indexOf(gitRepoName)
+        val gitRepoPath = req.path.partPath.slice(0, gitRepoIndex+1)
+
+        val result = resolver.withRespositoryFor(gitRepoPath.mkString("/")) { repo =>
+          Full(pf.apply(req.withNewPath(req.path.drop(gitRepoPath.length))).apply(repo))
+        }
+
+        result match {
+          case Full(innerResult) =>
+            innerResult
+          case o: EmptyBox =>
+            () => o
+        }
+      }
+    }
+  }
+
+  serve {
+    "api" / "v1" / "repos" prefix {
+      withRepository {
+        case "commits" :: commitRef :: Nil JsonGet req => repo =>
           withRevWalkFor(repo) { revwalk =>
             val skip: Int = S.param("skip").flatMap(asInt).openOr(0)
             val maxCount: Int = S.param("maxCount").flatMap(asInt).openOr(20)
@@ -56,10 +80,8 @@ object ApiV1 extends RestHelper with Loggable {
               decompose(toCommitSummary(revwalk, commit, skip, maxCount))
             }
           }
-        }
 
-      case "repos" :: id :: "commits" :: commitRef :: "tree" :: filePath JsonGet req =>
-        resolver.withRespositoryFor(transformer.transform(id)) { repo =>
+        case "commits" :: commitRef :: "tree" :: filePath JsonGet req => repo =>
           withRevWalkFor(repo) { revWalk =>
             withTreeWalkFor(repo) { treeWalk =>
               for {
@@ -73,10 +95,8 @@ object ApiV1 extends RestHelper with Loggable {
               }
             }
           }
-        }
 
-      case "repos" :: id :: "commits" :: commitRef :: "contents" :: filePath JsonGet req =>
-        resolver.withRespositoryFor(transformer.transform(id)) { repo =>
+        case "repos" :: id :: "commits" :: commitRef :: "contents" :: filePath JsonGet req => repo =>
           withRevWalkFor(repo) { revWalk =>
             withTreeWalkFor(repo) { treeWalk =>
               for {
@@ -101,7 +121,7 @@ object ApiV1 extends RestHelper with Loggable {
               }
             }
           }
-        }
+      }
     }
   }
 }
