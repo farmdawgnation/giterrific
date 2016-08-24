@@ -17,7 +17,8 @@
 package giterrific.jetty
 
 import java.io.File
-import java.util.Date
+import java.util._
+import java.text._
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.webapp.WebAppContext
 import net.liftweb.common.Box
@@ -27,8 +28,12 @@ import sun.misc.Signal
 import sun.misc.SignalHandler
 
 object Run {
+  val tz = TimeZone.getTimeZone("UTC");
+  val dateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss,SSS");
+  dateFormat.setTimeZone(tz)
+
   private def logMessage(message: String) = {
-    println(s"[BOOT ${new Date()}] $message")
+    println(s"${dateFormat.format(new Date())} BOOT $message")
   }
 
   def main(args: Array[String]): Unit = {

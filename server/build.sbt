@@ -18,6 +18,12 @@ enablePlugins(JettyPlugin, JavaServerAppPackaging, JDebPackaging, DockerPlugin)
 
 packageName in Docker := "farmdawgnation/giterrific"
 
+defaultLinuxInstallLocation in Docker := "/opt/giterrific"
+
+dockerBaseImage := "cantara/alpine-openjdk-jdk8"
+
+dockerExposedPorts := Seq(8080)
+
 resolvers ++= Seq("snapshots"     at "https://oss.sonatype.org/content/repositories/snapshots",
                 "releases"        at "https://oss.sonatype.org/content/repositories/releases")
 
@@ -69,6 +75,7 @@ mappings in Universal := {
     // universalMappings: Seq[(File,String)]
     val universalMappings = (mappings in Universal).value
     val fatJar = (assembly in Compile).value
+    Keys.`package`.value
     (addWebResources in Compile).value
 
     // removing means filtering
