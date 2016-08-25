@@ -19,6 +19,17 @@ package giterrific.client
 import scala.concurrent.ExecutionContext
 import giterrific.driver.http._
 
+/**
+ * The entrypoint for talking to a Giterrific server.
+ *
+ * The GiterrificClient accepts the base URL of your Giterrific host, including protocol prefix,
+ * hostname, and port and a driver conforming to the [[giterrific.driver.http.HttpDriver]] interface
+ * that Gitterific expects. If you don't provide a Driver, Giterrific will expect that Databinder
+ * Dispatch 0.11.2 is on your classpath and default to using that.
+ *
+ * @param baseUrl The base URL of your Giterrific server.
+ * @param driver The HTTP driver that this client should use under the hood.
+ */
 class GiterrificClient[ReqType <: HttpReq[ReqType]](
   baseUrl: String,
   driver: HttpDriver[ReqType] = DispatchHttpDriver()
