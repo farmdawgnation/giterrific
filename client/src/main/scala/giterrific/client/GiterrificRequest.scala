@@ -17,17 +17,20 @@
 package giterrific.client
 
 import giterrific.core._
+import giterrific.driver.http._
 import dispatch._
 import net.liftweb.json._
 import net.liftweb.json.Extraction._
 import scala.concurrent.ExecutionContext
 
-class GiterrificRequesterBase(
+class GiterrificRequesterBase[ReqType <: HttpReq[ReqType]](
+  driver: HttpDriver[ReqType],
   baseUrl: String,
   repoName: String
 )(implicit ec: ExecutionContext) {
   def withRef(refName: String) = {
     new GiterrificRequester(
+      driver,
       baseUrl,
       repoName,
       refName,
@@ -36,7 +39,8 @@ class GiterrificRequesterBase(
   }
 }
 
-class GiterrificRequester(
+class GiterrificRequester[ReqType <: HttpReq[ReqType]](
+  driver: HttpDriver[ReqType],
   baseUrl: String,
   repoName: String,
   refName: String,
@@ -55,8 +59,9 @@ class GiterrificRequester(
     }
   }
 
-  def withPath(path: String): GiterrificRequester = {
+  def withPath(path: String): GiterrificRequester[ReqType] = {
     new GiterrificRequester(
+      driver,
       baseUrl,
       repoName,
       refName,

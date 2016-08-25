@@ -17,12 +17,15 @@
 package giterrific.client
 
 import scala.concurrent.ExecutionContext
+import giterrific.driver.http._
 
-class GiterrificClient(
-  baseUrl: String
+class GiterrificClient[ReqType <: HttpReq[ReqType]](
+  baseUrl: String,
+  driver: HttpDriver[ReqType] = DispatchHttpDriver()
 )(implicit ec: ExecutionContext) {
-  def repo(repoName: String): GiterrificRequesterBase = {
+  def repo(repoName: String): GiterrificRequesterBase[ReqType] = {
     new GiterrificRequesterBase(
+      driver,
       baseUrl,
       repoName
     )
