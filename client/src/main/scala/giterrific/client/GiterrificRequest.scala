@@ -43,7 +43,17 @@ class GiterrificRequester(
   path: Option[String]
 )(implicit ec: ExecutionContext) {
   implicit val formats = DefaultFormats
-  val baseRequestBuilder = url(baseUrl) / "api" / "v1" / "repos" / repoName / "commits" / refName
+  val baseRequestBuilder: Req = url(baseUrl) / "api" / "v1" / "repos" / repoName / "commits" / refName
+
+  private[this] def run[T](request: Req)(implicit mf: Manifest[T]): Future[T] = {
+    Http {
+      baseRequestBuilder <:<
+        Map("Content-Type" -> "application/json", "Accept" -> "application/json") OK
+        as.String
+    } .map { response =>
+      parse(response).extract[T]
+    }
+  }
 
   def withPath(path: String): GiterrificRequester = {
     new GiterrificRequester(
@@ -55,9 +65,7 @@ class GiterrificRequester(
   }
 
   def getCommits(skip: Int = 0, maxCount: Int = 20): Future[List[RepositoryCommitSummary]] = {
-    Http(baseRequestBuilder OK as.String).map { response =>
-      parse(response).extract[List[RepositoryCommitSummary]]
-    }
+    run(baseRequestBuilder <<? Map("skip" -> skip.toString, "maxCount" -> maxCount.toString))
   }
 
   def getTree(): Future[List[RepositoryFileSummary]] = {
@@ -67,21 +75,16 @@ class GiterrificRequester(
       baseRequestBuilder / "tree" / path.getOrElse("")
     }
 
-    Http(treeRequestBuilder OK as.String).map { response =>
-      parse(response).extract[List[RepositoryFileSummary]]
-    }
+    run(treeRequestBuilder)
   }
 
   def getContents(): Future[RepositoryFileContent] = {
     if (path.isEmpty) {
       Future.failed(new IllegalStateException("You can only request content if a path is specified."))
     } else {
-      val contentRequestBuilder = baseRequestBuilder / "contents" / path.getOrElse("") <:<
-        Map("Content-Type" -> "application/json", "Accept" -> "application/json")
+      val contentRequestBuilder = baseRequestBuilder / "contents" / path.getOrElse("")
 
-      Http(contentRequestBuilder OK as.String).map { response =>
-        parse(response).extract[RepositoryFileContent]
-      }
+      run(contentRequestBuilder)
     }
   }
 }
