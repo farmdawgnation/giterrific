@@ -34,8 +34,23 @@ exposes:
 ## Giterrific Scala Bindings
 
 If you use Scala and want to use Giterrific from your Scala app, we've provided language bindings
-specifically for you! You'll find them under the `client/` folder. Using the client will require
-providing an ExecutionContext and working with Futures.
+specifically for you!
+
+To use them with their default, [Dispatch](https://github.com/dispatch/reboot) based HTTP
+implementation, add the following to your build.sbt file:
+
+```
+resolvers +=
+  "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
+libraryDependencies += "me.frmr.giterrific" %% "giterrific-client" % "0.1.0-SNAPSHOT"
+
+// Only if you want to use our default HTTP implementation
+libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.11.2"
+```
+
+After you've done the above, you can instantiate a new instance of the GiterrificClient and start
+interacting with the Giterrific server.
 
 ```scala
 // Import the client bindings
@@ -62,3 +77,16 @@ testRepo.withRef("master").withPath("files").getTree()
 // Get the contents of hello.txt at the root
 tesRepo.withRef("master").withPath("hello.txt").getContent()
 ```
+
+If you wish to use some other HTTP implementation, you can also do that by implementing your own
+version of the `HttpDriver` and `HttpReq` classes defined in HttpDriver.scala. An example of how
+we did this for dispatch can be found in DispatchHttpDriver.scala.
+
+After it's implemented, you can pass your new driver as the second argument to the GiterrificClient
+constructor
+
+```scala
+val client = new GiterrificClient("http://localhost:8080", myHttpDriver)
+```
+
+And Giterrific will use your HTTP implementation of choice.
