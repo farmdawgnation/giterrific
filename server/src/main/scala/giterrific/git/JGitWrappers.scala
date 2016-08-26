@@ -16,6 +16,7 @@
  */
 package giterrific.git
 
+import java.io.InputStream
 import java.lang.AutoCloseable
 import scala.collection._
 import scala.collection.JavaConversions._
@@ -247,6 +248,23 @@ object JGitWrappers {
               size = objectLoader.getSize()
             )
           }
+        }
+      }
+    }
+  }
+
+  /**
+   * Retrieves the current file in the tree walker as a stream of bytes.
+   *
+   * @param walker The tree walker currently queued up to the file you'd like to stream.
+   */
+  def toFileStream(walker: TreeWalk): Box[(Long, InputStream)] = {
+    withCloseable(walker.getObjectReader()) { objectReader =>
+      val currentObjectId = walker.getObjectId(0)
+
+      tryo(objectReader.open(currentObjectId)).flatMap { objectLoader =>
+        tryo {
+          (objectReader.getObjectSize(currentObjectId, ObjectReader.OBJ_ANY), objectLoader.openStream())
         }
       }
     }

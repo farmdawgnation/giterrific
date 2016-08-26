@@ -97,6 +97,39 @@ object ApiV1 extends RestHelper with Loggable {
               }
             }
           }
+
+        case "commits" :: commitRef :: "raw" :: filePath Get req => repo =>
+          withRevWalkFor(repo) { revWalk =>
+            withTreeWalkFor(repo) { treeWalk =>
+              for {
+                ref <- getRef(repo, commitRef)
+                commit <- getCommit(revWalk, ref)
+                commitTree = getCommitTree(commit)
+                _ <- addTree(treeWalk, commitTree)
+
+                // Lift's RestHelper typically uses the suffix of a file name to let the client
+                // indicate what type of response it would like to receive. The "filePath" above
+                // won't have the file extension on the last item as a result. So we retrieve the
+                // entire path from the request itself and drop the prefix.
+                wholePath = req.path.wholePath.drop(3)
+                parentDirectory = filePath.dropRight(1)
+                fileName <- wholePath.takeRight(1).headOption
+
+                _ = navigateTreeToPath(treeWalk, parentDirectory)
+                _ = filterTreeToFile(treeWalk, fileName)
+                (size, inputStream) <- toFileStream(treeWalk)
+              } yield {
+                StreamingResponse(
+                  inputStream,
+                  ()=>logger.trace(s"Successfully streamed $size bytes of $fileName to client"),
+                  size,
+                  Nil,
+                  Nil,
+                  200
+                )
+              }
+            }
+          }
       }
     }
   }
