@@ -85,7 +85,7 @@ object ApiV1 extends RestHelper with Loggable {
                 // indicate what type of response it would like to receive. The "filePath" above
                 // won't have the file extension on the last item as a result. So we retrieve the
                 // entire path from the request itself and drop the prefix.
-                wholePath = req.path.wholePath.drop(5)
+                wholePath = req.path.wholePath.drop(3)
                 parentDirectory = filePath.dropRight(1)
                 fileName <- wholePath.takeRight(1).headOption
 
