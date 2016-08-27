@@ -17,6 +17,10 @@ lazy val playws25 =
   (project in file("extras/playws25"))
     .dependsOn(client)
 
+lazy val playws24 =
+  (project in file("extras/playws24"))
+    .dependsOn(client)
+
 lazy val giterrific =
   (project in file("."))
     .settings(unidocSettings: _*)
