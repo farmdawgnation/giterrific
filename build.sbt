@@ -7,6 +7,8 @@ lazy val server =
 
 lazy val client =
   (project in file("client"))
+    .configs(IntegrationTest)
+    .settings(Defaults.itSettings: _*)
     .dependsOn(core)
 
 lazy val giterrific =

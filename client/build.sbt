@@ -6,9 +6,11 @@ version := GiterrificKeys.version
 
 scalaVersion := GiterrificKeys.primaryScalaVersion
 
-libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.11.2" % "provided"
+libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.11.2" % "provided,it"
 
 libraryDependencies += "net.liftweb" %% "lift-json" % "3.0-RC3"
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "it"
 
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
