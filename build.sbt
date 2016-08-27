@@ -17,7 +17,7 @@ lazy val giterrific =
   (project in file("."))
     .settings(unidocSettings: _*)
     .settings(
-      name := "foo",
+      name := "giterrific",
       unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(server),
       target in (ScalaUnidoc, unidoc) := baseDirectory.value / "docs" / "api" / GiterrificKeys.version,
       scalacOptions in (Compile, doc) ++= Opts.doc.title(s"Giterrific ${GiterrificKeys.version} API Documentation")
