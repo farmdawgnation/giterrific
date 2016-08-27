@@ -79,7 +79,7 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
   }
 
   def getCommits(skip: Int = 0, maxCount: Int = 20): Future[List[RepositoryCommitSummary]] = {
-    run(baseRequest.withQuery(Map(
+    run[List[RepositoryCommitSummary]](baseRequest.withQuery(Map(
       "skip" -> skip.toString,
       "maxCount" -> maxCount.toString
     )))
@@ -92,7 +92,7 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
       baseRequest / "tree" / path.getOrElse("")
     }
 
-    run(treeRequestBuilder)
+    run[List[RepositoryFileSummary]](treeRequestBuilder)
   }
 
   def getContents(): Future[RepositoryFileContent] = {
@@ -101,7 +101,7 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
     } else {
       val contentRequestBuilder = baseRequest / "contents" / path.getOrElse("")
 
-      run(contentRequestBuilder)
+      run[RepositoryFileContent](contentRequestBuilder)
     }
   }
 }
