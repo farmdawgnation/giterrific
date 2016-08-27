@@ -2,34 +2,51 @@
 
 _A lightweight JSON API for private git servers._
 
-Giterrific is a solution to a very silly problem: there doesn't exists (in as far as I could find)
-a minimalist JSON API microservice that would surface information about git repositories in a sane
-fashion. So, I wrote Giterrific.
+Giterrific is a solution to a very silly problem: there doesn't exist (in as far as I could find)
+a minimalist JSON API microservice that would surface information about bare git repositories on a
+server in a sane fashion. So, I wrote Giterrific.
 
 Giterrific surfaces basic information about your private Git repositories in simple, easy to
-consume, JSON APIs that don't require running a full GitLab or GitHub Enterprise setup. It's still
-very much in alpha, so plan accordingly.
+consume, JSON APIs that don't require running a full GitLab or GitHub Enterprise setup.
+
+Using Giterrific with your private git server you can:
+
+* Browse the commit history of repositories.
+* Browse the tree of repositories.
+* Retrieve JSON file content summaries from your repositories.
+* Retrieve just the raw file from your repositories.
+
+You can think of Giterrific a lot like Gitweb for your software. Where Gitweb presents information
+about repositories in a way that humans will find useful to navigate, Giterrific presents information
+about repositories in a way that software will find useful to navigate.
+
+Giterrific's primary component is the **Giterrific Server** that actually exposes the information
+about your projects.
 
 ## Giterrific Server
 
-The easiest way to use Giterrific Server for now is the Docker image. You can run it as follows:
+To take advantage of Giterrific you'll have to launch a Giterrific server.
+
+The easiest way to use Giterrific Server is the Docker image. You can run it as follows:
 
 ```
-docker run -p 8080:8080 -v /path/to/repos:/opt/docker/repos farmdawgnation/giterrific
+docker run -p 8080:8080 -v /path/to/repos:/opt/giterrific/repos farmdawgnation/giterrific
 ```
 
 This will boot a working Giterrific server that serves information about your git repositories.
 After this is up and running you can start making calls against the endpoints that the server
 exposes:
 
-* `/api/v1/repos/:id/commits/:ref` - List the commits starting at a particular ref.
-  * `:id` - The repository identifier.
+* `/api/v1/repos/:path/commits/:ref` - List the commits starting at a particular ref.
+  * `:path` - Path to the repository relative to the repos root. Should end in `.git`
   * `:ref` - The ref (branch name, commit sha, etc) to list commits from.
-* `/api/v1/repos/:id/commits/:ref/tree[/path/to/subfolders]` - List the contents of folders.
+* `/api/v1/repos/:path/commits/:ref/tree[/path/to/subfolders]` - List the contents of folders.
   * If no subfolder path is provided it lists the contents of the root of the repo's working
     directory.
-* `/api/v1/repos/:id/commits/:ref/contents/[path/to/file]` - Retrieve the content summary of a file.
+* `/api/v1/repos/:path/commits/:ref/contents/[path/to/file]` - Retrieve the content summary of a file.
   * The path must reference exactly one file.
+* `/api/v1/repos/:path/commits/:ref/raw/[path/to/file]` - Retrieve the raw file at the path.
+  * For files of a certain size, this is the only way to retrieve their content.
 
 ## Giterrific Client for Scala
 
