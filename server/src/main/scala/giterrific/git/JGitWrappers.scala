@@ -201,8 +201,8 @@ object JGitWrappers {
    * @param walker The tree walker to use.
    * @param expectedDepth The depth that you expect your files to be at.
    */
-  def toFileSummary(walker: TreeWalk, expectedDepth: Int): Seq[RepositoryFileSummary] = {
-    withCloseable(walker.getObjectReader()) { objectReader =>
+  def toFileSummary(walker: TreeWalk, expectedDepth: Int): Box[Seq[RepositoryFileSummary]] = {
+    val summaries = withCloseable(walker.getObjectReader()) { objectReader =>
       var resultSeq = Seq[RepositoryFileSummary]()
 
       while (walker.next() && walker.getDepth() == expectedDepth) {
@@ -218,6 +218,11 @@ object JGitWrappers {
       }
 
       resultSeq
+    }
+
+    summaries match {
+      case Seq() => Empty
+      case nonEmptySeq => Full(nonEmptySeq)
     }
   }
 

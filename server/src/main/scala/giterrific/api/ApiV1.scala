@@ -66,8 +66,9 @@ object ApiV1 extends RestHelper with Loggable {
                 commitTree = getCommitTree(commit)
                 _ <- addTree(treeWalk, commitTree)
                 _ = navigateTreeToPath(treeWalk, filePath)
+                summary <- toFileSummary(treeWalk, filePath.length)
               } yield {
-                decompose(toFileSummary(treeWalk, filePath.length))
+                decompose(summary)
               }
             }
           }
