@@ -31,13 +31,23 @@ exposes:
 * `/api/v1/repos/:id/commits/:ref/contents/[path/to/file]` - Retrieve the content summary of a file.
   * The path must reference exactly one file.
 
-## Giterrific Scala Bindings
+## Giterrific Client for Scala
 
-If you use Scala and want to use Giterrific from your Scala app, we've provided language bindings
-specifically for you!
+### Introduction
 
-To use them with their default, [Dispatch](https://github.com/dispatch/reboot) based HTTP
-implementation, add the following to your build.sbt file:
+_Quick Links: [Latest API Docs](http://github.frmr.me/giterrific/api/latest/)_
+
+Giterrific provides Scala language bindings from the giterrific-client project. This project uses
+the same data model objects that we use on the server from giterrific-core and makes it trivial
+to access information about your repositories in a structured manner.
+
+The client is designed for use with pluggable HTTP implementations. We implement and provide a
+default [Databinder Dispatch](https://github.com/dispatch/reboot) implementation, but make it
+trivial to provide your own if you choose to do so.
+
+### Pulling the client into your project
+
+To use the client in your project, add the following to your `build.sbt` file.
 
 ```
 resolvers +=
@@ -49,8 +59,11 @@ libraryDependencies += "me.frmr.giterrific" %% "giterrific-client" % "0.1.0-SNAP
 libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.11.2"
 ```
 
-After you've done the above, you can instantiate a new instance of the GiterrificClient and start
-interacting with the Giterrific server.
+### Using the client
+
+To use the client, you'll need to have a Giterrific Server set up somewhere. Once you've done that
+you can start making requests against the repositories that server knows about. Below is some
+example code that uses the test repo that is a part of this project.
 
 ```scala
 // Import the client bindings
@@ -78,15 +91,22 @@ testRepo.withRef("master").withPath("files").getTree()
 tesRepo.withRef("master").withPath("hello.txt").getContent()
 ```
 
+### Custom HTTP drivers
+
 If you wish to use some other HTTP implementation, you can also do that by implementing your own
 version of the `HttpDriver` and `HttpReq` classes defined in HttpDriver.scala. An example of how
 we did this for dispatch can be found in DispatchHttpDriver.scala.
 
 After it's implemented, you can pass your new driver as the second argument to the GiterrificClient
-constructor
+constructor:
 
 ```scala
 val client = new GiterrificClient("http://localhost:8080", myHttpDriver)
 ```
 
-And Giterrific will use your HTTP implementation of choice.
+From now on methods that are based on this client will use your custom HTTP driver.
+
+## About the Author
+
+My name is Matt Farmer. By day I write code for [Domino Data Lab](https://dominodatalab.com).
+By night, I contribute to various open source projects when I'm not binging something on Netflix.
