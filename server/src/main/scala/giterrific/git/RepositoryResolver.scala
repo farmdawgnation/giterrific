@@ -43,7 +43,7 @@ case class FileSystemRepositoryResolver(rootPath: String) extends Loggable {
     val compositeResult: Box[Box[T]] = for {
       fileHandle <- tryo(new File(s"$rootPath/$id")).filter(_.exists)
       createdRepository <- tryo(FileRepositoryBuilder.create(fileHandle))
-      _ = logger.debug(s"Resolution of $id successful.")
+      _ = logger.trace(s"Resolution of $id successful.")
       blockResult <- tryo(block(createdRepository))
       _ = createdRepository.close()
     } yield {
