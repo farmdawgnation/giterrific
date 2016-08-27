@@ -1,5 +1,7 @@
 //import sbtassembly.AssemblyKeys._
 
+import com.typesafe.sbt.packager.docker._
+
 name := "giterrific-server"
 
 version := GiterrificKeys.version
@@ -69,6 +71,8 @@ val assembledJarTask = assembledJar := Def.sequential(
   Keys.`package`,
   addWebResources
 ).value
+
+dockerCommands := dockerCommands.value.patch(1, Seq(ExecCmd("RUN", "apk", "update"), ExecCmd("RUN", "apk", "add", "--upgrade", "bash")), 0)
 
 // removes all jar mappings in universal and appends the fat jar
 mappings in Universal := {
