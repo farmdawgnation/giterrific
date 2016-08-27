@@ -13,6 +13,10 @@ lazy val client =
     .settings(Defaults.itSettings: _*)
     .dependsOn(core)
 
+lazy val playws25 =
+  (project in file("extras/playws25"))
+    .dependsOn(client)
+
 lazy val giterrific =
   (project in file("."))
     .settings(unidocSettings: _*)
