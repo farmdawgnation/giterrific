@@ -68,6 +68,17 @@ class Boot extends Loggable {
         )
     }
 
+    // Custom 500 behavior
+    LiftRules.responseTransformers.prepend {
+      case response if response.toResponse.code >= 500 =>
+        JsonResponse(
+          ("error" -> "An internal server error was experienced. Please check the Giterrific log."): JObject,
+          Nil,
+          Nil,
+          response.toResponse.code
+        )
+    }
+
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts
     JQueryModule.InitParam.JQuery=JQueryModule.JQuery1113
