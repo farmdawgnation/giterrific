@@ -1,3 +1,5 @@
+import UnidocKeys._
+
 lazy val core =
   (project in file("core"))
 
@@ -13,4 +15,11 @@ lazy val client =
 
 lazy val giterrific =
   (project in file("."))
+    .settings(unidocSettings: _*)
+    .settings(
+      name := "foo",
+      unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(server),
+      target in (ScalaUnidoc, unidoc) := baseDirectory.value / "doc" / "api" / GiterrificKeys.version,
+      scalacOptions in (Compile, doc) ++= Opts.doc.title(s"Giterrific ${GiterrificKeys.version} API Documentation")
+    )
     .aggregate(core, server, client)
