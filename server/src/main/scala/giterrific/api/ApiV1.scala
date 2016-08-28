@@ -19,6 +19,7 @@ package api
 
 import giterrific.git._
 import giterrific.git.JGitWrappers._
+import giterrific.server.BuildInfo
 import net.liftweb.common._
 import net.liftweb.http._
 import net.liftweb.http.LiftRules.DispatchPF
@@ -40,6 +41,16 @@ object ApiV1 extends RestHelper with Loggable {
     ).openOr("repos")
   }
   val resolver = FileSystemRepositoryResolver(repoRoot)
+
+  serve {
+    case "api" :: "v1" :: "version" :: Nil Get _ =>
+      Full(InMemoryResponse(
+        BuildInfo.toJson.getBytes("utf8"),
+        ("Content-Type" -> "application/json") :: Nil,
+        Nil,
+        200
+      ))
+  }
 
   serve {
     "api" / "v1" / "repos" prefix {

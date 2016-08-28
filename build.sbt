@@ -6,6 +6,12 @@ lazy val core =
 lazy val server =
   (project in file("server"))
     .dependsOn(core)
+    .enablePlugins(BuildInfoPlugin)
+    .settings(
+      buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+      buildInfoPackage := "giterrific.server",
+      buildInfoOptions += BuildInfoOption.ToJson
+    )
 
 lazy val client =
   (project in file("client"))
