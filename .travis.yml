@@ -1,11 +1,15 @@
 language: scala
 sudo: required
+
+env:
+  - GTRVERSION: 0.1.0-SNAPSHOT
+
 services:
   - docker
 
 before_install:
-  - docker pull farmdawgnation/giterrific:latest
-  - docker run -d -p 8080:8080 -v $TRAVIS_BUILD_DIR/repos:/opt/giterrific/repos farmdawgnation/giterrific:latest
+  - sbt server/docker:publishLocal
+  - docker run -d -p 8080:8080 -v $TRAVIS_BUILD_DIR/repos:/opt/giterrific/repos farmdawgnation/giterrific:$GTRVERSION
 
 branches:
   only:
