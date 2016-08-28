@@ -21,6 +21,14 @@ import java.util.concurrent.ExecutionException
 import play.api.libs.ws._
 import scala.concurrent.{ExecutionContext, Future}
 
+/**
+ * A data structure representing a request that will be used with Play 2.5's implementation of the
+ * WS library.
+ *
+ * @param url The URL to issue the request to.
+ * @param headers The headers to use for the request.
+ * @param query The query string parameters for the request.
+ */
 case class WS25HttpReq(
   url: String,
   headers: Map[String, String] = Map.empty,
@@ -36,6 +44,11 @@ case class WS25HttpReq(
     copy(url = this.url + "/" + urlPart)
 }
 
+/**
+ * An implementation of a Giterrific HTTP driver based on Play 2.5's implementation of the WS library.
+ *
+ * @param wsClient The WS Client that should be used to make requests.
+ */
 case class WS25HttpDriver(wsClient: WSClient) extends HttpDriver[WS25HttpReq] {
   def url(url: String): WS25HttpReq = WS25HttpReq(url)
 
