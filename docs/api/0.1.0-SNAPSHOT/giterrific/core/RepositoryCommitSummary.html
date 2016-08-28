@@ -39,7 +39,9 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A data structure representing a summary of a commit in the repository.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A data structure representing a summary of a commit in the repository.</p><p>The <code>sha</code> will identifiy the full SHA hash of the commit. The <code>message</code> will be the <b>full</b>
+message that the author wrote - including expanded content. If you wish to only show the headline
+(commonly known as the short message) you can parse out the first line of content.
 </p></div><dl class="paramcmts block"><dt class="param">sha</dt><dd class="cmt"><p>The sha identifier of the commit.</p></dd><dt class="param">author</dt><dd class="cmt"><p>The person who authored the commit.</p></dd><dt class="param">committer</dt><dd class="cmt"><p>The person who committed the commit into the repo.</p></dd><dt class="param">message</dt><dd class="cmt"><p>The message associated with the commit.
 </p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>

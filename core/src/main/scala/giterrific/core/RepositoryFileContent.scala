@@ -24,8 +24,8 @@ package giterrific.core
  * by attempting to allocate a byte array large enough to hold the file and catching an OutOfMemoryError
  * if one occurs during that attempt.
  *
- * If we are able to create this data structure, it will contain the {{content}} encoded in the specified
- * {{encoding}} - which will either be "base64" or "utf8".
+ * If we are able to create this data structure, it will contain the `content` encoded in the specified
+ * `encoding` - which will either be "base64" or "utf8".
  *
  * @param name The name of the file.
  * @param content The content of the file.

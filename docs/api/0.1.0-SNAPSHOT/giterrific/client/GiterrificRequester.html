@@ -39,7 +39,9 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Representation of a &quot;full&quot; requester for Giterrific server information. This requester is capable
+of operating on the remote repository by retrieving commits, trees, and contents.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -79,7 +81,7 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="giterrific.client.GiterrificRequester#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="giterrific.client.GiterrificRequester#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(driver:giterrific.driver.http.HttpDriver[ReqType],baseUrl:String,repoName:String,refName:String,path:Option[String])(implicitec:scala.concurrent.ExecutionContext):giterrific.client.GiterrificRequester[ReqType]"></a>
       <a id="&lt;init&gt;:GiterrificRequester[ReqType]"></a>
       <h4 class="signature">
@@ -91,7 +93,8 @@
         <span class="name">GiterrificRequester</span><span class="params">(<span name="driver">driver: <a href="../driver/http/HttpDriver.html" class="extype" name="giterrific.driver.http.HttpDriver">HttpDriver</a>[<span class="extype" name="giterrific.client.GiterrificRequester.ReqType">ReqType</span>]</span>, <span name="baseUrl">baseUrl: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="repoName">repoName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="refName">refName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="path">path: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">driver</dt><dd class="cmt"><p>The driver associated with the requester.</p></dd><dt class="param">baseUrl</dt><dd class="cmt"><p>The base URL associated with the requester.</p></dd><dt class="param">repoName</dt><dd class="cmt"><p>The relative path and name of the repository.</p></dd><dt class="param">refName</dt><dd class="cmt"><p>The name of the ref this requester interacts with.</p></dd><dt class="param">path</dt><dd class="cmt"><p>An optional path that the requester should operate at. Affects the results of tree and content retrieval.
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -179,19 +182,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="giterrific.client.GiterrificRequester#baseRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="baseRequest:ReqType"></a>
-      <a id="baseRequest:ReqType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">baseRequest</span><span class="result">: <span class="extype" name="giterrific.client.GiterrificRequester.ReqType">ReqType</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -282,7 +272,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="giterrific.client.GiterrificRequester#getCommits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="giterrific.client.GiterrificRequester#getCommits" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getCommits(skip:Int,maxCount:Int):scala.concurrent.Future[List[giterrific.core.RepositoryCommitSummary]]"></a>
       <a id="getCommits(Int,Int):Future[List[RepositoryCommitSummary]]"></a>
       <h4 class="signature">
@@ -294,8 +284,11 @@
         <span class="name">getCommits</span><span class="params">(<span name="skip">skip: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>, <span name="maxCount">maxCount: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">20</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.List">List</span>[<a href="../core/RepositoryCommitSummary.html" class="extype" name="giterrific.core.RepositoryCommitSummary">RepositoryCommitSummary</a>]]</span>
       </span>
       </h4>
-      
-    </li><li name="giterrific.client.GiterrificRequester#getContents" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Retrieve a summary of recent commits on the ref defined by <code>refName</code> from the server.</p><div class="fullcomment"><div class="comment cmt"><p>Retrieve a summary of recent commits on the ref defined by <code>refName</code> from the server.</p><p>Since there may be quite a lot of commits in a repository, this method takes in two parameters:
+<code>skip</code> and <code>maxCount</code> that should enable pagiantion.
+</p></div><dl class="paramcmts block"><dt class="param">skip</dt><dd class="cmt"><p>The number of commits to skip when generating the summary. Defaults to 0.</p></dd><dt class="param">maxCount</dt><dd class="cmt"><p>The number of commits to return when generating the summary. Defaults to 20.
+</p></dd></dl></div>
+    </li><li name="giterrific.client.GiterrificRequester#getContents" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getContents():scala.concurrent.Future[giterrific.core.RepositoryFileContent]"></a>
       <a id="getContents():Future[RepositoryFileContent]"></a>
       <h4 class="signature">
@@ -307,7 +300,9 @@
         <span class="name">getContents</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../core/RepositoryFileContent.html" class="extype" name="giterrific.core.RepositoryFileContent">RepositoryFileContent</a>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Retrieve the contents of the file indicated by <code>path</code> for this requester.</p><div class="fullcomment"><div class="comment cmt"><p>Retrieve the contents of the file indicated by <code>path</code> for this requester. This method will fail
+if no path is defined.
+</p></div></div>
     </li><li name="giterrific.client.GiterrificRequester#getTree" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="getTree():scala.concurrent.Future[List[giterrific.core.RepositoryFileSummary]]"></a>
       <a id="getTree():Future[List[RepositoryFileSummary]]"></a>
@@ -320,7 +315,7 @@
         <span class="name">getTree</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.List">List</span>[<a href="../core/RepositoryFileSummary.html" class="extype" name="giterrific.core.RepositoryFileSummary">RepositoryFileSummary</a>]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Retrieve the tree of the repository, at a particular <code>path</code> if one is defined for this requester.</p>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -469,7 +464,7 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="giterrific.client.GiterrificRequester#withPath" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="giterrific.client.GiterrificRequester#withPath" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="withPath(path:String):giterrific.client.GiterrificRequester[ReqType]"></a>
       <a id="withPath(String):GiterrificRequester[ReqType]"></a>
       <h4 class="signature">
@@ -481,7 +476,24 @@
         <span class="name">withPath</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="" class="extype" name="giterrific.client.GiterrificRequester">GiterrificRequester</a>[<span class="extype" name="giterrific.client.GiterrificRequester.ReqType">ReqType</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Return a new instance of the requester defined at a particular path.</p><div class="fullcomment"><div class="comment cmt"><p>Return a new instance of the requester defined at a particular path. This path isn't validated
+until one of the server-facing get methods is invoked.
+</p></div><dl class="paramcmts block"><dt class="param">path</dt><dd class="cmt"><p>The new path to point the requester at. Could be a file or directory path.
+</p></dd></dl></div>
+    </li><li name="giterrific.client.GiterrificRequester#withoutPath" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="withoutPath:giterrific.client.GiterrificRequester[ReqType]"></a>
+      <a id="withoutPath:GiterrificRequester[ReqType]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withoutPath</span><span class="result">: <a href="" class="extype" name="giterrific.client.GiterrificRequester">GiterrificRequester</a>[<span class="extype" name="giterrific.client.GiterrificRequester.ReqType">ReqType</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Return a new instance of the requester without a path defined, which essentially positions this
+requester at the root of the repository.</p>
     </li></ol>
             </div>
 

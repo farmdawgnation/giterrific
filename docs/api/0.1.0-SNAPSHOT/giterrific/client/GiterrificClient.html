@@ -39,10 +39,21 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The entrypoint for talking to a Giterrific server.</p><p>The GiterrificClient accepts the base URL of your Giterrific host, including protocol prefix,
-hostname, and port and a driver conforming to the <a href="../driver/http/HttpDriver.html" class="extype" name="giterrific.driver.http.HttpDriver">giterrific.driver.http.HttpDriver</a> interface
-that Gitterific expects. If you don't provide a Driver, Giterrific will expect that Databinder
-Dispatch 0.11.2 is on your classpath and default to using that.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A client that is used to talk to a Giterrific server.</p><p>The client accepts a <code>baseUrl</code> and a <code>driver</code>. The driver is the shim through which Giterrific
+interacts with the underlying HTTP interface.</p><h4> Drivers </h4><p>If you aren't opinionated about what driver
+you'd like you use, you can use the provided <a href="../driver/http/DispatchHttpDriver.html" class="extype" name="giterrific.driver.http.DispatchHttpDriver">DispatchHttpDriver</a>
+which is backed by Databinder Dispatch. To use that, you'll need to make sure that you indlude
+Dispatch's core in your dependencies in your <code>build.sbt</code> file like so:</p><pre>libraryDependencies += <span class="lit">"net.databinder.dispatch"</span> %% <span class="lit">"dispatch-core"</span> % <span class="lit">"0.11.2"</span></pre><p>After you've included Dispatch and Giterrific in your project, instantiating a client should be
+pretty straightforward:</p><pre><span class="kw">import</span> giterrific.client._
+<span class="kw">val</span> client = <span class="kw">new</span> GiterrificClient(<span class="lit">"http://giterrifichostname:8080"</span>)</pre><h5> Alternate drivers </h5><p>If you prefer to use some other HTTP implementation you have a few options. Giterrific provides
+drivers backed by Play's WS library for Play 2.4 and Play 2.5. For Play 2.4 you'll need to pull
+in the <code>giterrific-playws24</code> library:</p><pre>libraryDependencies += <span class="lit">"me.frmr.giterrific.extras"</span> %% <span class="lit">"giterrific-playws24"</span> % <span class="lit">"0.1.0"</span></pre><p>Likewise, if you use Play 2.5, you should pull in the <code>giterrific-playws25</code> library.</p><pre>libraryDependencies += <span class="lit">"me.frmr.giterrific.extras"</span> %% <span class="lit">"giterrific-playws25"</span> % <span class="lit">"0.1.0"</span></pre><p>These libraries implement <a href="../driver/http/WS24HttpDriver.html" class="extype" name="giterrific.driver.http.WS24HttpDriver">WS24HttpDriver</a> and
+and <a href="../driver/http/WS25HttpDriver.html" class="extype" name="giterrific.driver.http.WS25HttpDriver">WS25HttpDriver</a> respectively.</p><h4> Using the client </h4><p>The client is designed to be used in a builder pattern. One created a client is meant to be used
+to access a number of different repositories and refs on your server. To start, you'll need to
+select what repository you'd like to access. You do this by invoking <code>repo</code> with the relative
+path to the repository on the server. The repository must end in &quot;.git&quot; for the server to
+recognize it correctly.</p><pre><span class="kw">val</span> projectsRepo = client.repo(<span class="lit">"mfarmer/testprojects.git"</span>)</pre><p>From there you select a ref:</p><pre>projectRepo.withRef(<span class="lit">"master"</span>)</pre><p>And from there you can start invoking different operations available on
+<a href="GiterrificRequester.html" class="extype" name="giterrific.client.GiterrificRequester">GiterrificRequester</a>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -326,7 +337,7 @@ Dispatch 0.11.2 is on your classpath and default to using that.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="giterrific.client.GiterrificClient#repo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="giterrific.client.GiterrificClient#repo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="repo(repoName:String):giterrific.client.GiterrificRequesterBase[ReqType]"></a>
       <a id="repo(String):GiterrificRequesterBase[ReqType]"></a>
       <h4 class="signature">
@@ -338,7 +349,10 @@ Dispatch 0.11.2 is on your classpath and default to using that.
         <span class="name">repo</span><span class="params">(<span name="repoName">repoName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="GiterrificRequesterBase.html" class="extype" name="giterrific.client.GiterrificRequesterBase">GiterrificRequesterBase</a>[<span class="extype" name="giterrific.client.GiterrificClient.ReqType">ReqType</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Selects a repositoy on the server to interact with.</p><div class="fullcomment"><div class="comment cmt"><p>Selects a repositoy on the server to interact with.</p><p>The name of the repository is the same as its relative path, relative to the repo root for
+the giterrific server. The validity of the repository isn't validated at this point.
+</p></div><dl class="paramcmts block"><dt class="param">repoName</dt><dd class="cmt"><p>The name (relative path to) of the repository you'd like to interact with.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

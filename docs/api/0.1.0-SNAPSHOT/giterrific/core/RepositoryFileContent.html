@@ -39,7 +39,11 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A data structure representing the file content of a file within the repository.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A data structure representing the file content of a file within the repository.</p><p>This data structure is only capable of representing files up to the available memory limit of the
+JVM. The underlying implementation (provided by JGit's ObjectLoader) works a little empirically
+by attempting to allocate a byte array large enough to hold the file and catching an OutOfMemoryError
+if one occurs during that attempt.</p><p>If we are able to create this data structure, it will contain the <code>content</code> encoded in the specified
+<code>encoding</code> - which will either be &quot;base64&quot; or &quot;utf8&quot;.
 </p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>The name of the file.</p></dd><dt class="param">content</dt><dd class="cmt"><p>The content of the file.</p></dd><dt class="param">encoding</dt><dd class="cmt"><p>The encoding used for the content of the file. Either base64 or utf-8.</p></dd><dt class="param">size</dt><dd class="cmt"><p>The size of the file.
 </p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>

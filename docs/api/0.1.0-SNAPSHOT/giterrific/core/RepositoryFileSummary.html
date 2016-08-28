@@ -39,7 +39,10 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A data structure representing the summary of a file in a repository.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A data structure representing the summary of a file in a repository.</p><p>This summary includes all the information you might find if you were using <code>ls</code> on a directory
+on your local file system. Specifically, the name of the file, its path in the overall repository,
+the permissions associated with it (<code>mode</code>), whether or not it is a directory, and its total
+size.
 </p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>The name of the file.</p></dd><dt class="param">path</dt><dd class="cmt"><p>The path of the file.</p></dd><dt class="param">mode</dt><dd class="cmt"><p>The permissions on the file when it's expanded.</p></dd><dt class="param">isDirectory</dt><dd class="cmt"><p>True if this is a directory. False for a normal file.</p></dd><dt class="param">size</dt><dd class="cmt"><p>The size of the actual file.
 </p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>

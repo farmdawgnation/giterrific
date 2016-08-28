@@ -35,7 +35,7 @@ case class RepositoryCommitIdentity(
 /**
  * A data structure representing a summary of a commit in the repository.
  *
- * The {{sha}} will identifiy the full SHA hash of the commit. The {{message}} will be the <b>full</b>
+ * The `sha` will identifiy the full SHA hash of the commit. The `message` will be the <b>full</b>
  * message that the author wrote - including expanded content. If you wish to only show the headline
  * (commonly known as the short message) you can parse out the first line of content.
  *

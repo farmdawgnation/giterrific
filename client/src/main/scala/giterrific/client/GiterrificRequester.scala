@@ -35,7 +35,14 @@ class GiterrificRequesterBase[ReqType <: HttpReq[ReqType]](
   baseUrl: String,
   repoName: String
 )(implicit ec: ExecutionContext) {
-  def withRef(refName: String) = {
+  /**
+   * The ref that you'd like to execute operations on.
+   *
+   * The validity of the ref isn't validated at this point.
+   *
+   * @param refName The name of the ref.
+   */
+  def withRef(refName: String): GiterrificRequester[ReqType] = {
     new GiterrificRequester(
       driver,
       baseUrl,
@@ -46,6 +53,16 @@ class GiterrificRequesterBase[ReqType <: HttpReq[ReqType]](
   }
 }
 
+/**
+ * Representation of a "full" requester for Giterrific server information. This requester is capable
+ * of operating on the remote repository by retrieving commits, trees, and contents.
+ *
+ * @param driver The driver associated with the requester.
+ * @param baseUrl The base URL associated with the requester.
+ * @param repoName The relative path and name of the repository.
+ * @param refName The name of the ref this requester interacts with.
+ * @param path An optional path that the requester should operate at. Affects the results of tree and content retrieval.
+ */
 class GiterrificRequester[ReqType <: HttpReq[ReqType]](
   driver: HttpDriver[ReqType],
   baseUrl: String,
@@ -55,7 +72,7 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
 )(implicit ec: ExecutionContext) {
   implicit val formats = DefaultFormats
 
-  val baseRequest: ReqType = driver.url(baseUrl) / "api" / "v1" / "repos" / repoName / "commits" / refName
+  private[this] val baseRequest: ReqType = driver.url(baseUrl) / "api" / "v1" / "repos" / repoName / "commits" / refName
 
   private[this] def run[T](request: ReqType)(implicit mf: Manifest[T]): Future[T] = {
     val requestWithContentHeaders = request.withHeaders(Map(
@@ -68,6 +85,26 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
     }
   }
 
+  /**
+   * Return a new instance of the requester without a path defined, which essentially positions this
+   * requester at the root of the repository.
+   */
+  def withoutPath: GiterrificRequester[ReqType] = {
+    new GiterrificRequester(
+      driver,
+      baseUrl,
+      repoName,
+      refName,
+      None
+    )
+  }
+
+  /**
+   * Return a new instance of the requester defined at a particular path. This path isn't validated
+   * until one of the server-facing get methods is invoked.
+   *
+   * @param path The new path to point the requester at. Could be a file or directory path.
+   */
   def withPath(path: String): GiterrificRequester[ReqType] = {
     new GiterrificRequester(
       driver,
@@ -78,6 +115,15 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
     )
   }
 
+  /**
+   * Retrieve a summary of recent commits on the ref defined by `refName` from the server.
+   *
+   * Since there may be quite a lot of commits in a repository, this method takes in two parameters:
+   * `skip` and `maxCount` that should enable pagiantion.
+   *
+   * @param skip The number of commits to skip when generating the summary. Defaults to 0.
+   * @param maxCount The number of commits to return when generating the summary. Defaults to 20.
+   */
   def getCommits(skip: Int = 0, maxCount: Int = 20): Future[List[RepositoryCommitSummary]] = {
     run[List[RepositoryCommitSummary]](baseRequest.withQuery(Map(
       "skip" -> skip.toString,
@@ -85,6 +131,9 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
     )))
   }
 
+  /**
+   * Retrieve the tree of the repository, at a particular `path` if one is defined for this requester.
+   */
   def getTree(): Future[List[RepositoryFileSummary]] = {
     val treeRequestBuilder = if (path.isEmpty) {
       baseRequest / "tree"
@@ -95,6 +144,10 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
     run[List[RepositoryFileSummary]](treeRequestBuilder)
   }
 
+  /**
+   * Retrieve the contents of the file indicated by `path` for this requester. This method will fail
+   * if no path is defined.
+   */
   def getContents(): Future[RepositoryFileContent] = {
     if (path.isEmpty) {
       Future.failed(new IllegalStateException("You can only request content if a path is specified."))

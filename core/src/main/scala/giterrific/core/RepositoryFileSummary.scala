@@ -19,9 +19,9 @@ package giterrific.core
 /**
  * A data structure representing the summary of a file in a repository.
  *
- * This summary includes all the information you might find if you were using {{ls}} on a directory
+ * This summary includes all the information you might find if you were using `ls` on a directory
  * on your local file system. Specifically, the name of the file, its path in the overall repository,
- * the permissions associated with it ({{mode}}), whether or not it is a directory, and its total
+ * the permissions associated with it (`mode`), whether or not it is a directory, and its total
  * size.
  *
  * @param name The name of the file.

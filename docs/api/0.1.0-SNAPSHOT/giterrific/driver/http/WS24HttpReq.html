@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>HttpReq - Giterrific 0.1.0-SNAPSHOT API Documentation - giterrific.driver.http.HttpReq</title>
-          <meta name="description" content="HttpReq - Giterrific 0.1.0 - SNAPSHOT API Documentation - giterrific.driver.http.HttpReq" />
-          <meta name="keywords" content="HttpReq Giterrific 0.1.0 SNAPSHOT API Documentation giterrific.driver.http.HttpReq" />
+          <title>WS24HttpReq - Giterrific 0.1.0-SNAPSHOT API Documentation - giterrific.driver.http.WS24HttpReq</title>
+          <meta name="description" content="WS24HttpReq - Giterrific 0.1.0 - SNAPSHOT API Documentation - giterrific.driver.http.WS24HttpReq" />
+          <meta name="keywords" content="WS24HttpReq Giterrific 0.1.0 SNAPSHOT API Documentation giterrific.driver.http.WS24HttpReq" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'giterrific.driver.http.HttpReq';
+            var hash = 'giterrific.driver.http.WS24HttpReq';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -24,29 +24,24 @@
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../../lib/trait_big.png" />
+        <img src="../../../lib/class_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="giterrific">giterrific</a>.<a href="../package.html" class="extype" name="giterrific.driver">driver</a>.<a href="package.html" class="extype" name="giterrific.driver.http">http</a></p>
-        <h1>HttpReq</h1>
+        <h1>WS24HttpReq</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">trait</span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">HttpReq</span><span class="tparams">[<span name="UnderlyingType">UnderlyingType &lt;: <a href="" class="extype" name="giterrific.driver.http.HttpReq">HttpReq</a>[<span class="extype" name="giterrific.driver.http.HttpReq.UnderlyingType">UnderlyingType</span>]</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">WS24HttpReq</span><span class="params">(<span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="headers">headers: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="defval" name="scala.this.Predef.Map.empty[String, Nothing]">...</span></span>, <span name="query">query: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="defval" name="scala.this.Predef.Map.empty[String, Nothing]">...</span></span>)</span><span class="result"> extends <a href="HttpReq.html" class="extype" name="giterrific.driver.http.HttpReq">HttpReq</a>[<a href="" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A trait representing a generic HTTP request.</p><p>If you choose to implement a custom driver for Giterrific, you should also implement its custom
-HttpReq.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
-        </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="DispatchHttpReq.html" class="extype" name="giterrific.driver.http.DispatchHttpReq">DispatchHttpReq</a>, <a href="WS24HttpReq.html" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a>, <a href="WS25HttpReq.html" class="extype" name="giterrific.driver.http.WS25HttpReq">WS25HttpReq</a></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <a href="HttpReq.html" class="extype" name="giterrific.driver.http.HttpReq">HttpReq</a>[<a href="" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a>], <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -64,7 +59,7 @@ HttpReq.
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="giterrific.driver.http.HttpReq"><span>HttpReq</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="giterrific.driver.http.WS24HttpReq"><span>WS24HttpReq</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="giterrific.driver.http.HttpReq"><span>HttpReq</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -82,56 +77,30 @@ HttpReq.
 
       <div id="template">
         <div id="allMembers">
-        
-
-        
-
-        <div id="values" class="values members">
-              <h3>Abstract Value Members</h3>
-              <ol><li name="giterrific.driver.http.HttpReq#/" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="/(urlPart:String):UnderlyingType"></a>
-      <a id="/(String):UnderlyingType"></a>
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="giterrific.driver.http.WS24HttpReq#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(url:String,headers:Map[String,String],query:Map[String,String]):giterrific.driver.http.WS24HttpReq"></a>
+      <a id="&lt;init&gt;:WS24HttpReq"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
+        <span class="modifier"></span>
+        <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $div" class="name">/</span><span class="params">(<span name="urlPart">urlPart: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="giterrific.driver.http.HttpReq.UnderlyingType">UnderlyingType</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="giterrific.driver.http.HttpReq#withHeaders" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="withHeaders(headers:Map[String,String]):UnderlyingType"></a>
-      <a id="withHeaders(Map[String,String]):UnderlyingType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">withHeaders</span><span class="params">(<span name="headers">headers: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <span class="extype" name="giterrific.driver.http.HttpReq.UnderlyingType">UnderlyingType</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="giterrific.driver.http.HttpReq#withQuery" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="withQuery(query:Map[String,String]):UnderlyingType"></a>
-      <a id="withQuery(Map[String,String]):UnderlyingType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">withQuery</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <span class="extype" name="giterrific.driver.http.HttpReq.UnderlyingType">UnderlyingType</span></span>
+        <span class="name">WS24HttpReq</span><span class="params">(<span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="headers">headers: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="defval" name="scala.this.Predef.Map.empty[String, Nothing]">...</span></span>, <span name="query">query: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="defval" name="scala.this.Predef.Map.empty[String, Nothing]">...</span></span>)</span>
       </span>
       </h4>
       
     </li></ol>
             </div>
 
+        
+
+        
+
         <div id="values" class="values members">
-              <h3>Concrete Value Members</h3>
+              <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
@@ -171,6 +140,19 @@ HttpReq.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="giterrific.driver.http.WS24HttpReq#/" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="/(urlPart:String):giterrific.driver.http.WS24HttpReq"></a>
+      <a id="/(String):WS24HttpReq"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $div" class="name">/</span><span class="params">(<span name="urlPart">urlPart: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a> → <a href="HttpReq.html" class="extype" name="giterrific.driver.http.HttpReq">HttpReq</a></dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:AnyRef):Boolean"></a>
       <a id="==(AnyRef):Boolean"></a>
@@ -242,19 +224,6 @@ HttpReq.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="equals(x$1:Any):Boolean"></a>
-      <a id="equals(Any):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -287,19 +256,19 @@ HttpReq.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hashCode():Int"></a>
-      <a id="hashCode():Int"></a>
+    </li><li name="giterrific.driver.http.WS24HttpReq#headers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="headers:Map[String,String]"></a>
+      <a id="headers:Map[String,String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">headers</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -352,6 +321,19 @@ HttpReq.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="giterrific.driver.http.WS24HttpReq#query" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="query:Map[String,String]"></a>
+      <a id="query:Map[String,String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">query</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -365,19 +347,19 @@ HttpReq.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toString():String"></a>
-      <a id="toString():String"></a>
+    </li><li name="giterrific.driver.http.WS24HttpReq#url" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="url:String"></a>
+      <a id="url:String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">url</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -435,6 +417,32 @@ HttpReq.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="giterrific.driver.http.WS24HttpReq#withHeaders" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="withHeaders(headers:Map[String,String]):giterrific.driver.http.WS24HttpReq"></a>
+      <a id="withHeaders(Map[String,String]):WS24HttpReq"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withHeaders</span><span class="params">(<span name="headers">headers: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <a href="" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a> → <a href="HttpReq.html" class="extype" name="giterrific.driver.http.HttpReq">HttpReq</a></dd></dl></div>
+    </li><li name="giterrific.driver.http.WS24HttpReq#withQuery" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="withQuery(query:Map[String,String]):giterrific.driver.http.WS24HttpReq"></a>
+      <a id="withQuery(Map[String,String]):WS24HttpReq"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withQuery</span><span class="params">(<span name="query">query: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <a href="" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a> → <a href="HttpReq.html" class="extype" name="giterrific.driver.http.HttpReq">HttpReq</a></dd></dl></div>
     </li></ol>
             </div>
 
@@ -444,7 +452,17 @@ HttpReq.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
+            </div><div class="parent" name="giterrific.driver.http.HttpReq">
+              <h3>Inherited from <a href="HttpReq.html" class="extype" name="giterrific.driver.http.HttpReq">HttpReq</a>[<a href="" class="extype" name="giterrific.driver.http.WS24HttpReq">WS24HttpReq</a>]</h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
