@@ -19,6 +19,14 @@ package giterrific.core
 /**
  * A data structure representing the file content of a file within the repository.
  *
+ * This data structure is only capable of representing files up to the available memory limit of the
+ * JVM. The underlying implementation (provided by JGit's ObjectLoader) works a little empirically
+ * by attempting to allocate a byte array large enough to hold the file and catching an OutOfMemoryError
+ * if one occurs during that attempt.
+ *
+ * If we are able to create this data structure, it will contain the {{content}} encoded in the specified
+ * {{encoding}} - which will either be "base64" or "utf8".
+ *
  * @param name The name of the file.
  * @param content The content of the file.
  * @param encoding The encoding used for the content of the file. Either base64 or utf-8.
