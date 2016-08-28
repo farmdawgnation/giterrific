@@ -2,6 +2,8 @@
 
 _A lightweight JSON API for private git servers._
 
+[![Build Status](https://travis-ci.org/farmdawgnation/giterrific.svg?branch=master)](https://travis-ci.org/farmdawgnation/giterrific)
+
 Giterrific is a solution to a very silly problem: there doesn't exist (in as far as I could find)
 a minimalist JSON API microservice that would surface information about bare git repositories on a
 server in a sane fashion. So, I wrote Giterrific.
