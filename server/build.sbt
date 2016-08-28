@@ -6,6 +6,8 @@ name := "giterrific-server"
 
 version := GiterrificKeys.version
 
+scalacOptions ++= GiterrificKeys.defaultScalacOptions 
+
 organization := "me.frmr.giterrific"
 
 maintainer := "Matt Farmer <matt@frmr.me>"

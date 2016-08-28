@@ -6,6 +6,8 @@ version := GiterrificKeys.version
 
 scalaVersion := GiterrificKeys.primaryScalaVersion
 
+scalacOptions ++= GiterrificKeys.defaultScalacOptions 
+
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
   if (v.trim.endsWith("SNAPSHOT"))
