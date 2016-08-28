@@ -18,6 +18,8 @@ credentials += Credentials(Path.userHome / ".sonatype")
 
 libraryDependencies += "com.typesafe.play" %% "play-ws" % "2.5.6" % "provided"
 
+libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "1.6.0-SNAPSHOT" % "it"
+
 pomExtra :=
 <url>https://github.com/farmdawgnation/giterrific</url>
 <licenses>

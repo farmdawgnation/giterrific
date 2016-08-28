@@ -15,11 +15,15 @@ lazy val client =
 
 lazy val playws25 =
   (project in file("extras/playws25"))
-    .dependsOn(client)
+    .configs(IntegrationTest)
+    .settings(Defaults.itSettings: _*)
+    .dependsOn(client % "compile->compile;it->it")
 
 lazy val playws24 =
   (project in file("extras/playws24"))
-    .dependsOn(client)
+    .configs(IntegrationTest)
+    .settings(Defaults.itSettings: _*)
+    .dependsOn(client % "compile->compile;it->it")
 
 lazy val giterrific =
   (project in file("."))

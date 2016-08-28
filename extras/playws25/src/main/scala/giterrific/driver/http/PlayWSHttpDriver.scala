@@ -17,6 +17,7 @@
 
 package giterrific.driver.http
 
+import java.util.concurrent.ExecutionException
 import play.api.libs.ws._
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,6 +44,12 @@ case class WSHttpDriver(wsClient: WSClient) extends HttpDriver[WSHttpReq] {
       .withHeaders(request.headers.toSeq: _*)
       .withQueryString(request.headers.toSeq: _*)
 
-    underlyingRequest.get().map(_.body)
+    underlyingRequest.get().flatMap { response =>
+      if (response.status == 200) {
+        Future.successful(response.body)
+      } else {
+        Future.failed(new ExecutionException(s"Upstream returned ${response.status} for request.", new RuntimeException(response.body)))
+      }
+    }
   }
 }
