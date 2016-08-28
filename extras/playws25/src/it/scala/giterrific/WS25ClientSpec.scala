@@ -6,7 +6,7 @@ import org.scalatest._
 import org.scalatestplus.play.guice._
 import play.api.libs.ws.ning._
 
-class PlayWS25ClientSpec extends ClientSpec[WS25HttpReq] with GuiceFakeApplicationFactory with BeforeAndAfterAll {
+class WS25ClientSpec extends ClientSpec[WS25HttpReq] with GuiceFakeApplicationFactory with BeforeAndAfterAll {
   val app = fakeApplication()
   implicit lazy val materializer = app.materializer
   val wsClient = NingWSClient()
