@@ -2,14 +2,15 @@ package giterrific
 
 import giterrific.core._
 import giterrific.client._
+import giterrific.driver.http._
 import org.scalatest._
 import org.scalatest.RecoverMethods._
 import net.liftweb.json._
 import net.liftweb.json.Extraction._
 
-class ClientSpec extends AsyncFeatureSpec with GivenWhenThen {
+trait ClientSpec[ReqType <: HttpReq[ReqType]] extends AsyncFeatureSpec with GivenWhenThen {
   implicit val formats = DefaultFormats
-  val testClient = new GiterrificClient("http://localhost:8080")
+  val testClient: GiterrificClient[ReqType]
 
   info("As a consumer of the giterrific client")
   info("I want my client to be query the details of my repository")
