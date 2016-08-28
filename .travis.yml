@@ -20,4 +20,4 @@ script: sbt client/it:test playws24/it:test
 
 cache:
   directories:
-  - $HOME/.m2
+  - $HOME/.ivy2
