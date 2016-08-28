@@ -21,25 +21,25 @@ import java.util.concurrent.ExecutionException
 import play.api.libs.ws._
 import scala.concurrent.{ExecutionContext, Future}
 
-case class WSHttpReq(
+case class WSHttpReq25(
   url: String,
   headers: Map[String, String] = Map.empty,
   query: Map[String, String] = Map.empty
-) extends HttpReq[WSHttpReq] {
-  def withHeaders(headers: Map[String, String]): WSHttpReq =
+) extends HttpReq[WSHttpReq25] {
+  def withHeaders(headers: Map[String, String]): WSHttpReq25 =
     copy(headers = this.headers ++ headers)
 
-  def withQuery(query: Map[String, String]): WSHttpReq =
+  def withQuery(query: Map[String, String]): WSHttpReq25 =
     copy(query = this.query ++ query)
 
-  def /(urlPart: String): WSHttpReq =
+  def /(urlPart: String): WSHttpReq25 =
     copy(url = this.url + "/" + urlPart)
 }
 
-case class WSHttpDriver(wsClient: WSClient) extends HttpDriver[WSHttpReq] {
-  def url(url: String): WSHttpReq = WSHttpReq(url)
+case class WSHttpDriver25(wsClient: WSClient) extends HttpDriver[WSHttpReq25] {
+  def url(url: String): WSHttpReq25 = WSHttpReq25(url)
 
-  def run(request: WSHttpReq)(implicit ec: ExecutionContext): Future[String] = {
+  def run(request: WSHttpReq25)(implicit ec: ExecutionContext): Future[String] = {
     val underlyingRequest = wsClient.url(request.url)
       .withHeaders(request.headers.toSeq: _*)
       .withQueryString(request.headers.toSeq: _*)
