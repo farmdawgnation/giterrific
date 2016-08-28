@@ -77,6 +77,8 @@ class Boot extends Loggable {
           Nil,
           response.toResponse.code
         )
+
+      case response => response
     }
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
