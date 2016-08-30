@@ -8,9 +8,7 @@ services:
   - docker
 
 before_install:
-  - sudo apt-get install zip
-  - sbt server/docker:publishLocal
-  - docker run -d -p 8080:8080 -v $TRAVIS_BUILD_DIR/repos:/opt/giterrific/repos farmdawgnation/giterrific:$GTRVERSION
+  - docker run -d -p 8080:8080 -v $TRAVIS_BUILD_DIR/repos:/opt/giterrific/repos farmdawgnation/giterrific:snapshot
 
 branches:
   only:
