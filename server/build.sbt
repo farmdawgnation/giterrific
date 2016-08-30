@@ -64,7 +64,7 @@ assemblyMergeStrategy in assembly := {
 
 lazy val addWebResources = taskKey[Int]("Add the web resources to the assembled jar")
 
-addWebResources := Process(s"/usr/bin/env zip -r scala-2.11/${name.value}-${version.value}.jar webapp -x webapp/WEB-INF/lib*", new File("server/target")).!
+addWebResources := Process(s"zip -r scala-2.11/${name.value}-${version.value}.jar webapp -x webapp/WEB-INF/lib*", new File("server/target")).!
 
 lazy val assembledJar = taskKey[Int]("Build the fully assembled JAR including web resources")
 
