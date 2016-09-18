@@ -50,6 +50,27 @@ exposes:
 * `/api/v1/repos/:path/commits/:ref/raw/[path/to/file]` - Retrieve the raw file at the path.
   * For files of a certain size, this is the only way to retrieve their content.
 
+### Versioning
+
+Giterrific follows a modified [Semantic Versioning](http://semver.org). Our version numbers are
+denotes using three numbers, separated by dots in the form of `MAJOR.MINOR.PATCH`. However, in
+addition to the version of the server we also have different versions of the API. For everyone's
+sanity, we've decided to use the `MAJOR` version of the Giterrific server to indicate the latest
+stable version of the API.
+
+So, for example:
+
+* Changes to the `PATCH` version may introduce backward-compatible bug fixes to any of the APIs that
+  Giterrific exposes.
+* Changes to the `MINOR` version may introduce backward-compatible changes to the stable API, but
+  breaking changes to the experimental API.
+* Changes to the `MAJOR` version denote the current experimental API becoming stable.
+
+So, if Giterrific's version is `0.1.0` then the APIs under `/api/v1` are considered experimental
+and may change in a breaking manner between minor releases. If Giterrific's version is `1.0.0` then
+the APIs under `/api/v1` are considered stable and the APIs under `/api/v2` are considered
+experimental.
+
 ## Giterrific Client for Scala
 
 ### Introduction
