@@ -1,0 +1,125 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Giterrific API
+  description: A lightweight JSON API for private Git servers
+  version: "0.1.0"
+# will be prefixed to all paths
+basePath: /api/v1
+produces:
+  - application/json
+paths:
+  /repos/{repo}/commits/{ref}:
+    get:
+      summary: List the commits starting at a particular ref.
+      parameters:
+        - name: repo
+          in: path
+          description: |
+            The path to the git repository relative to the configured root fo the
+            Giterrific server. Must end in ".git"
+          required: true
+          type: string
+        - name: ref
+          in: path
+          description: |
+            A ref indicating the HEAD at which to start traversing commits. This could
+            be a branch name or a commit SHA.
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of commit summaries.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepositoryCommitSummary'
+        default:
+          description: An unexpected error
+          
+  /repos/{repo}/commits/{ref}/tree:
+    get:
+      summary: Retreive the file contents of the root of the repository.
+      parameters:
+        - name: repo
+          in: path
+          description: |
+            The path to the git repository relative to the configured root fo the
+            Giterrific server. Must end in ".git"
+          required: true
+          type: string
+        - name: ref
+          in: path
+          description: |
+            A ref indicating the HEAD at which to traverse the tree.
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of commit summaries.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepositoryCommitSummary'
+        default:
+          description: An unexpected error
+          
+  /repos/{repo}/commits/{ref}/tree/{filepath}:
+    get:
+      summary: Retreive the contents of a filepath in the repository.
+      parameters:
+        - name: repo
+          in: path
+          description: |
+            The path to the git repository relative to the configured root fo the
+            Giterrific server. Must end in ".git"
+          required: true
+          type: string
+        - name: ref
+          in: path
+          description: |
+            A ref indicating the HEAD at which to traverse the tree.
+          required: true
+          type: string
+        - name: filepath
+          in: path
+          description: The 
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of commit summaries.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RepositoryCommitSummary'
+        default:
+          description: An unexpected error
+
+definitions:
+  RepositoryCommitIdentity:
+    type: object
+    properties:
+      date:
+        type: string
+        description: "[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date representation of when the person touched the commit."
+      name:
+        type: string
+        description: The name of the person identified by this identity object.
+      email:
+        type: string
+        description: The description of the person identified by this identity object.
+  RepositoryCommitSummary:
+    type: object
+    properties:
+      sha:
+        type: string
+        description: The sha identifier of the commit.
+      author:
+        $ref: '#/definitions/RepositoryCommitIdentity'
+      committer:
+        $ref: '#/definitions/RepositoryCommitIdentity'
+      message:
+        type: string
+        description: The message associated with the commit.
