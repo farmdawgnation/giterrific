@@ -1,12 +1,14 @@
-# this is an example of the Uber API
-# as a demonstration of an API spec in YAML
 swagger: '2.0'
 info:
   title: Giterrific API
   description: A lightweight JSON API for private Git servers
   version: "0.1.0"
-# will be prefixed to all paths
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
 basePath: /api/v1
+consumes:
+  - application/json
 produces:
   - application/json
 paths:
@@ -28,6 +30,15 @@ paths:
             be a branch name or a commit SHA.
           required: true
           type: string
+        - name: maxCount
+          in: query
+          description: The maximum number of commits to return for this query.
+          type: number
+        - name: skip
+          in: query
+          type: number
+          description: |
+            The number of commits to skip before returning commits for this request.
       responses:
         200:
           description: An array of commit summaries.
@@ -37,7 +48,7 @@ paths:
               $ref: '#/definitions/RepositoryCommitSummary'
         default:
           description: An unexpected error
-          
+
   /repos/{repo}/commits/{ref}/tree:
     get:
       summary: Retreive the file contents of the root of the repository.
@@ -57,17 +68,17 @@ paths:
           type: string
       responses:
         200:
-          description: An array of commit summaries.
+          description: An array of file summaries.
           schema:
             type: array
             items:
-              $ref: '#/definitions/RepositoryCommitSummary'
+              $ref: '#/definitions/RepositoryFileSummary'
         default:
           description: An unexpected error
-          
+
   /repos/{repo}/commits/{ref}/tree/{filepath}:
     get:
-      summary: Retreive the contents of a filepath in the repository.
+      summary: Retreive the contents of a subpath in the repository.
       parameters:
         - name: repo
           in: path
@@ -84,7 +95,7 @@ paths:
           type: string
         - name: filepath
           in: path
-          description: The 
+          description: The directory whose contents you wish to retrieve.
           required: true
           type: string
       responses:
@@ -93,7 +104,67 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/RepositoryCommitSummary'
+              $ref: '#/definitions/RepositoryFileSummary'
+        default:
+          description: An unexpected error
+
+  /repos/{repo}/commits/{ref}/contents/{filepath}:
+    get:
+      summary: Retreive the contents of a file.
+      parameters:
+        - name: repo
+          in: path
+          description: |
+            The path to the git repository relative to the configured root fo the
+            Giterrific server. Must end in ".git"
+          required: true
+          type: string
+        - name: ref
+          in: path
+          description: |
+            A ref indicating the HEAD at which to traverse the tree.
+          required: true
+          type: string
+        - name: filepath
+          in: path
+          description: The directory whose contents you wish to retrieve.
+          required: true
+          type: string
+      responses:
+        200:
+          description: A file contents object.
+          schema:
+            $ref: '#/definitions/RepositoryFileContent'
+        default:
+          description: An unexpected error
+
+  /repos/{repo}/commits/{ref}/raw/{filepath}:
+    get:
+      summary: Retreive the raw stream of a file.
+      parameters:
+        - name: repo
+          in: path
+          description: |
+            The path to the git repository relative to the configured root fo the
+            Giterrific server. Must end in ".git"
+          required: true
+          type: string
+        - name: ref
+          in: path
+          description: |
+            A ref indicating the HEAD at which to traverse the tree.
+          required: true
+          type: string
+        - name: filepath
+          in: path
+          description: The directory whose contents you wish to retrieve.
+          required: true
+          type: string
+      responses:
+        200:
+          description: The file contents.
+          schema:
+            type: file
         default:
           description: An unexpected error
 
@@ -110,6 +181,7 @@ definitions:
       email:
         type: string
         description: The description of the person identified by this identity object.
+
   RepositoryCommitSummary:
     type: object
     properties:
@@ -123,3 +195,44 @@ definitions:
       message:
         type: string
         description: The message associated with the commit.
+
+  RepositoryFileSummary:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The name of the file this summary references.
+      path:
+        type: string
+        description: The full path to the file this summary references.
+      mode:
+        type: string
+        description: The permissions assigned to the file when it's in a working folder.
+      isDirectory:
+        type: boolean
+        description: Whether or not this entry is a directory.
+      size:
+        type: integer
+        description: The size of the file entry.
+        minimum: 0
+
+  RepositoryFileContent:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The name of the file that this content represents.
+      content:
+        type: string
+        description: |
+          The content of the file, encoded according to the specified encoding.
+      encoding:
+        type: string
+        description: The encoding of the file's contents.
+        enum:
+          - 'utf8'
+          - 'base64'
+      size:
+        type: integer
+        description: The size of the file in bytes.
+        minimum: 0
