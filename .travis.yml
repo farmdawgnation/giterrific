@@ -1,9 +1,6 @@
 language: scala
 sudo: required
 
-env:
-  - GTRVERSION: 0.1.0-SNAPSHOT
-
 services:
   - docker
 
