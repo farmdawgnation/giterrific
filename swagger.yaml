@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
-  title: Giterrific API
-  description: A lightweight JSON API for private Git servers
+  title: Giterrific REST API v1
+  description: A lightweight JSON API for private Git servers.
   version: "0.1.0"
   license:
     name: Apache 2.0
@@ -11,10 +11,31 @@ consumes:
   - application/json
 produces:
   - application/json
+
+parameters:
+repo:
+  name: repo
+  in: path
+  description: |
+    The path to the git repository relative to the configured root fo the
+    Giterrific server. Must end in ".git"
+  required: true
+  type: string
+ref:
+  in: path
+  description: |
+    A ref indicating the HEAD at which to start traversing commits. This could
+    be a branch name or a commit SHA.
+  required: true
+  type: string
+
 paths:
   /repos/{repo}/commits/{ref}:
     get:
+      operationId: "getCommits"
       summary: List the commits starting at a particular ref.
+      tags:
+        - commits
       parameters:
         - name: repo
           in: path
@@ -52,6 +73,8 @@ paths:
   /repos/{repo}/commits/{ref}/tree:
     get:
       summary: Retreive the file contents of the root of the repository.
+      tags:
+        - tree
       parameters:
         - name: repo
           in: path
@@ -79,6 +102,8 @@ paths:
   /repos/{repo}/commits/{ref}/tree/{filepath}:
     get:
       summary: Retreive the contents of a subpath in the repository.
+      tags:
+        - tree
       parameters:
         - name: repo
           in: path
@@ -111,6 +136,8 @@ paths:
   /repos/{repo}/commits/{ref}/contents/{filepath}:
     get:
       summary: Retreive the contents of a file.
+      tags:
+        - contents
       parameters:
         - name: repo
           in: path
@@ -141,6 +168,11 @@ paths:
   /repos/{repo}/commits/{ref}/raw/{filepath}:
     get:
       summary: Retreive the raw stream of a file.
+      produces:
+        - application/json
+        - application/octet-stream
+      tags:
+        - contents
       parameters:
         - name: repo
           in: path
@@ -174,6 +206,7 @@ definitions:
     properties:
       date:
         type: string
+        format: date
         description: "[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date representation of when the person touched the commit."
       name:
         type: string
