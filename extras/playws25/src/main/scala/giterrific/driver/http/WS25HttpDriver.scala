@@ -17,8 +17,10 @@
 
 package giterrific.driver.http
 
+import java.io.InputStream
 import java.util.concurrent.ExecutionException
 import play.api.libs.ws._
+import play.api.libs.ws.ahc._
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
@@ -60,6 +62,28 @@ case class WS25HttpDriver(wsClient: WSClient) extends HttpDriver[WS25HttpReq] {
     underlyingRequest.get().flatMap { response =>
       if (response.status == 200) {
         Future.successful(response.body)
+      } else {
+        Future.failed(new ExecutionException(s"Upstream returned ${response.status} for request.", new RuntimeException(response.body)))
+      }
+    }
+  }
+
+  def runRaw(request: WS25HttpReq)(implicit ec: ExecutionContext): Future[InputStream] = {
+    val underlyingRequest = wsClient.url(request.url)
+      .withHeaders(request.headers.toSeq: _*)
+      .withQueryString(request.headers.toSeq: _*)
+
+    underlyingRequest.get().flatMap { response =>
+      if (response.status == 200) {
+        response match {
+          case ahcResponse: AhcWSResponse =>
+            Future.successful(ahcResponse.ahcResponse.getResponseBodyAsStream())
+
+          case unknownResponse =>
+            Future.failed(new ExecutionException(
+              new RuntimeException("Got an unknown type of WSResponse. Needed NingWSResponse.")
+            ))
+        }
       } else {
         Future.failed(new ExecutionException(s"Upstream returned ${response.status} for request.", new RuntimeException(response.body)))
       }
