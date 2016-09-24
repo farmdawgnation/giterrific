@@ -17,6 +17,7 @@
 package giterrific.driver.http
 
 import com.ning.http.client.Response
+import java.util.concurrent.ExecutionException
 import java.io.InputStream
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -52,8 +53,8 @@ case class DispatchHttpDriver() extends HttpDriver[DispatchHttpReq] {
         val statusCode = result.getStatusCode()
         val body = result.getResponseBody()
 
-        Future.failed(new RuntimeException(
-          "Got status code $statusCode and response: $body"
+        Future.failed(new ExecutionException(
+          new RuntimeException("Got status code $statusCode and response: $body")
         ))
       }
     }
