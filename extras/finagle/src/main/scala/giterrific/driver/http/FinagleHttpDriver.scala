@@ -43,6 +43,17 @@ case class FinagleHttpReq(
 
   def /(urlPart: String): FinagleHttpReq =
     copy(url = this.url + "/" + urlPart)
+
+  private[http] lazy val completeUrl: String = {
+    if (query == Map.empty) {
+      url
+    } else {
+      url + "?" + query.toList.map {
+        case (key, value) =>
+          "$key=$value"
+      }.mkString("&")
+    }
+  }
 }
 
 /**
@@ -52,36 +63,7 @@ case class FinagleHttpDriver() extends HttpDriver[FinagleHttpReq] {
   def url(url: String) = FinagleHttpReq(url)
 
   def run(request: FinagleHttpReq)(implicit ec: ExecutionContext): Future[String] = {
-    val generatedUrl = if (request.query == Map.empty) {
-      request.url
-    } else {
-      request.url + "?" + request.query.toList.map {
-        case (key, value) =>
-          "$key=$value"
-      }.mkString("&")
-    }
-
-    val parsedUrl = new URL(generatedUrl)
-    val initialBuilder = http.RequestBuilder().url(parsedUrl)
-    val builderWithHeaders = request.headers.toList.foldLeft(initialBuilder) { (currentBuilder, header) =>
-      currentBuilder.setHeader(header._1, header._2)
-    }
-    val finalRequest = builderWithHeaders.buildGet()
-
-    val hostname = parsedUrl.getHost()
-    val port = if (parsedUrl.getPort() == -1) {
-      parsedUrl.getDefaultPort()
-    } else {
-      parsedUrl.getPort()
-    }
-    val client = Http.newService(s"$hostname:$port")
-
-    val resultPromise = Promise[http.Response]()
-    val twitterFuture = client(finalRequest)
-    twitterFuture.respond(twitterTry => resultPromise.complete(twitterTry.asScala))
-    val resultFuture = resultPromise.future
-
-    resultFuture.flatMap { httpResponse =>
+    issueRequest(request).flatMap { httpResponse =>
       if (httpResponse.statusCode == 200) {
         Future.successful(httpResponse.getContentString())
       } else {
@@ -96,5 +78,42 @@ case class FinagleHttpDriver() extends HttpDriver[FinagleHttpReq] {
 
   def runRaw(request: FinagleHttpReq)(implicit ec: ExecutionContext): Future[InputStream] = {
     Future.failed(new IllegalStateException("boo!"))
+  }
+
+  private[this] def issueRequest(request: FinagleHttpReq)(implicit ec: ExecutionContext): Future[http.Response] = {
+    val twitterRequest = constructTwitterRequest(request)
+    val (hostname, port) = computeHostAndPort(request)
+    val client = Http.newService(s"$hostname:$port")
+    toScalaFuture(client(twitterRequest))
+  }
+
+  // Converts our request format into an actual request object we can pass into Finagle.
+  private[this] def constructTwitterRequest(giterrificRequest: FinagleHttpReq): http.Request = {
+    val builder = http.RequestBuilder().url(giterrificRequest.completeUrl)
+
+    val builderWithHeaders = giterrificRequest.headers.toList.foldLeft(builder) { (currentBuilder, header) =>
+      currentBuilder.setHeader(header._1, header._2)
+    }
+
+    builderWithHeaders.buildGet()
+  }
+
+  private[this] def computeHostAndPort(giterrificRequest: FinagleHttpReq): (String, Int) = {
+    val url = new URL(giterrificRequest.completeUrl)
+
+    val hostname = url.getHost()
+    val port = if (url.getPort() == -1) {
+      url.getDefaultPort()
+    } else {
+      url.getPort()
+    }
+
+    (hostname, port)
+  }
+
+  private[this] def toScalaFuture[T](twitterFuture: com.twitter.util.Future[T])(implicit mf: Manifest[T]): Future[T] = {
+    val resultPromise = Promise[T]()
+    twitterFuture.respond(twitterTry => resultPromise.complete(twitterTry.asScala))
+    resultPromise.future
   }
 }
