@@ -50,3 +50,22 @@ case class RepositoryCommitSummary(
   committer: RepositoryCommitIdentity,
   message: String
 )
+
+/**
+ * A data structure representing a page of commits from the repository.
+ *
+ * @param ref The ref that this commit summary page is browsing.
+ * @param totalCommitCount The total number of commits on this ref.
+ * @param skip The number of commits skipped before the beginning of this page.
+ * @param maxCount The maximum number of commits that could be in this page.
+ * @param commits The commits for this page.
+ */
+case class RepositoryCommitSummaryPage(
+  ref: String,
+  totalCommitCount: Int,
+  skip: Int,
+  maxCount: Int,
+  commits: List[RepositoryCommitSummary]
+) {
+  def length = commits.length
+}

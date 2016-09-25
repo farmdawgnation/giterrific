@@ -153,6 +153,19 @@ object JGitWrappers {
   }
 
   /**
+   * Count the total number of commits in a tree, the head of which should be identified by
+   * startCommit. This method will reset the walker after it's calculated the number of commits.
+   *
+   * @param walker The rev walker that you'd like to navigate in.
+   * @param startCommit the HEAD from which to start counting commits.
+   */
+  def countCommitsInTree(walker: RevWalk, startCommit: RevCommit): Int = {
+    val numberOfCommits = RevWalkUtils.count(walker, startCommit, null)
+    walker.reset()
+    numberOfCommits
+  }
+
+  /**
    * Generate a commit summary for a repository. This method includes built in support for
    * pagination by way of "skip" and "maxCount".
    *
