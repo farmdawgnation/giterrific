@@ -77,7 +77,17 @@ case class FinagleHttpDriver() extends HttpDriver[FinagleHttpReq] {
   }
 
   def runRaw(request: FinagleHttpReq)(implicit ec: ExecutionContext): Future[InputStream] = {
-    Future.failed(new IllegalStateException("boo!"))
+    issueRequest(request).flatMap { httpResponse =>
+      if (httpResponse.statusCode == 200) {
+        Future.successful(httpResponse.getInputStream())
+      } else {
+        Future.failed(new ExecutionException(
+          new RuntimeException(
+            s"Server returned ${httpResponse.statusCode} with response: ${httpResponse.getContentString}"
+          )
+        ))
+      }
+    }
   }
 
   private[this] def issueRequest(request: FinagleHttpReq)(implicit ec: ExecutionContext): Future[http.Response] = {
