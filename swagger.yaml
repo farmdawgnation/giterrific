@@ -1,8 +1,15 @@
 swagger: '2.0'
 info:
   title: Giterrific REST API v1
-  description: A lightweight JSON API for private Git servers.
-  version: "0.1.0"
+  description: |
+    **Giterrific** is a  lightweight JSON API for private Git servers. It
+    exposes simple and straightforward actions for obtaining information about
+    git repositories. Unlike GitLab or GitHub Enterprise, its goal isn't to
+    profile full fledged collaboration and editing tools for git repositories.
+    Instead, the objective is to better enable applications to be built _on top_
+    of git repositories by surfacing information about them in a structured
+    JSON API.
+  version: "0.2.0"
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -11,46 +18,51 @@ consumes:
   - application/json
 produces:
   - application/json
+  - text/plain
+host: "localhost:8080"
 
 parameters:
-repo:
-  name: repo
-  in: path
-  description: |
-    The path to the git repository relative to the configured root fo the
-    Giterrific server. Must end in ".git"
-  required: true
-  type: string
-ref:
-  in: path
-  description: |
-    A ref indicating the HEAD at which to start traversing commits. This could
-    be a branch name or a commit SHA.
-  required: true
-  type: string
+  repo:
+    name: repo
+    in: path
+    description: |
+      The path to the git repository relative to the configured root fo the
+      Giterrific server. Must end in ".git"
+    required: true
+    type: string
+  ref:
+    name: ref
+    in: path
+    description: |
+      A ref indicating the HEAD at which to start traversing commits. This could
+      be a branch name or a commit SHA.
+    required: true
+    type: string
+  filepathForDirectory:
+    name: filepath
+    in: path
+    description: The directory whose files you wish to list.
+    required: true
+    type: string
+  filepathForFile:
+    name: filepath
+    in: path
+    description: The file whose contents you wish to retrieve.
+    required: true
+    type: string
 
 paths:
   /repos/{repo}/commits/{ref}:
     get:
       operationId: "getCommits"
-      summary: List the commits starting at a particular ref.
+      summary: |
+        List the commits on a particular ref, which could be a branch or a sha
+        hash of some sort.
       tags:
         - commits
       parameters:
-        - name: repo
-          in: path
-          description: |
-            The path to the git repository relative to the configured root fo the
-            Giterrific server. Must end in ".git"
-          required: true
-          type: string
-        - name: ref
-          in: path
-          description: |
-            A ref indicating the HEAD at which to start traversing commits. This could
-            be a branch name or a commit SHA.
-          required: true
-          type: string
+        - $ref: '#/parameters/repo'
+        - $ref: '#/parameters/ref'
         - name: maxCount
           in: query
           description: The maximum number of commits to return for this query.
@@ -62,9 +74,13 @@ paths:
             The number of commits to skip before returning commits for this request.
       responses:
         200:
-          description: An array of commit summaries.
+          description: The result of a successful execution of the request.
           schema:
             $ref: '#/definitions/RepositoryCommitSummaryPage'
+        404:
+          description: Used if the repo or the ref could not be found.
+          schema:
+            type: string
         default:
           description: An unexpected error
 
@@ -74,19 +90,8 @@ paths:
       tags:
         - tree
       parameters:
-        - name: repo
-          in: path
-          description: |
-            The path to the git repository relative to the configured root fo the
-            Giterrific server. Must end in ".git"
-          required: true
-          type: string
-        - name: ref
-          in: path
-          description: |
-            A ref indicating the HEAD at which to traverse the tree.
-          required: true
-          type: string
+        - $ref: '#/parameters/repo'
+        - $ref: '#/parameters/ref'
       responses:
         200:
           description: An array of file summaries.
@@ -94,6 +99,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/RepositoryFileSummary'
+        404:
+          description: Used if the repo or the ref could not be found.
+          schema:
+            type: string
         default:
           description: An unexpected error
 
@@ -103,24 +112,9 @@ paths:
       tags:
         - tree
       parameters:
-        - name: repo
-          in: path
-          description: |
-            The path to the git repository relative to the configured root fo the
-            Giterrific server. Must end in ".git"
-          required: true
-          type: string
-        - name: ref
-          in: path
-          description: |
-            A ref indicating the HEAD at which to traverse the tree.
-          required: true
-          type: string
-        - name: filepath
-          in: path
-          description: The directory whose contents you wish to retrieve.
-          required: true
-          type: string
+        - $ref: '#/parameters/repo'
+        - $ref: '#/parameters/ref'
+        - $ref: '#/parameters/filepathForDirectory'
       responses:
         200:
           description: An array of commit summaries.
@@ -128,6 +122,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/RepositoryFileSummary'
+        404:
+          description: Used if the repo, ref, or file path could not be found.
+          schema:
+            type: string
         default:
           description: An unexpected error
 
@@ -137,29 +135,22 @@ paths:
       tags:
         - contents
       parameters:
-        - name: repo
-          in: path
-          description: |
-            The path to the git repository relative to the configured root fo the
-            Giterrific server. Must end in ".git"
-          required: true
-          type: string
-        - name: ref
-          in: path
-          description: |
-            A ref indicating the HEAD at which to traverse the tree.
-          required: true
-          type: string
-        - name: filepath
-          in: path
-          description: The directory whose contents you wish to retrieve.
-          required: true
-          type: string
+        - $ref: '#/parameters/repo'
+        - $ref: '#/parameters/ref'
+        - $ref: '#/parameters/filepathForFile'
       responses:
         200:
           description: A file contents object.
           schema:
             $ref: '#/definitions/RepositoryFileContent'
+        404:
+          description: Used if the repo, ref, or file path could not be found.
+          schema:
+            type: string
+        400:
+          description: Used if the file requested is too large to be serialized as JSON.
+          schema:
+            type: string
         default:
           description: An unexpected error
 
@@ -172,29 +163,18 @@ paths:
       tags:
         - contents
       parameters:
-        - name: repo
-          in: path
-          description: |
-            The path to the git repository relative to the configured root fo the
-            Giterrific server. Must end in ".git"
-          required: true
-          type: string
-        - name: ref
-          in: path
-          description: |
-            A ref indicating the HEAD at which to traverse the tree.
-          required: true
-          type: string
-        - name: filepath
-          in: path
-          description: The directory whose contents you wish to retrieve.
-          required: true
-          type: string
+        - $ref: '#/parameters/repo'
+        - $ref: '#/parameters/ref'
+        - $ref: '#/parameters/filepathForFile'
       responses:
         200:
           description: The file contents.
           schema:
             type: file
+        404:
+          description: Used if the repo, ref, or file path could not be found.
+          schema:
+            type: string
         default:
           description: An unexpected error
 
