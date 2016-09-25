@@ -11,7 +11,7 @@ branches:
   only:
   - master
 
-script: sbt client/it:test playws24/it:test
+script: sbt client/it:test playws24/it:test finagle/it:test
 
 cache:
   directories:
