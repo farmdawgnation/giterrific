@@ -16,6 +16,7 @@
  */
 package giterrific.client
 
+import java.io.InputStream
 import giterrific.core._
 import giterrific.driver.http._
 import net.liftweb.json._
@@ -74,15 +75,21 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
 
   private[this] val baseRequest: ReqType = driver.url(baseUrl) / "api" / "v1" / "repos" / repoName / "commits" / refName
 
-  private[this] def run[T](request: ReqType)(implicit mf: Manifest[T]): Future[T] = {
-    val requestWithContentHeaders = request.withHeaders(Map(
+  private[this] def prepareRequest(request: ReqType): ReqType = {
+    request.withHeaders(Map(
       "Content-Type" -> "application/json",
       "Accept" -> "application/json"
     ))
+  }
 
-    driver.run(requestWithContentHeaders).map { response =>
+  private[this] def run[T](request: ReqType)(implicit mf: Manifest[T]): Future[T] = {
+    driver.run(prepareRequest(request)).map { response =>
       parse(response).extract[T]
     }
+  }
+
+  private[this] def runRaw(request: ReqType): Future[InputStream] = {
+    driver.runRaw(prepareRequest(request))
   }
 
   /**
@@ -155,6 +162,21 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
       val contentRequestBuilder = baseRequest / "contents" / path.getOrElse("")
 
       run[RepositoryFileContent](contentRequestBuilder)
+    }
+  }
+
+  /**
+   * Retrieve the raw contents of the file as an InputStream. Utilizing this method is required
+   * for files larger than a certain size. Please note that the caller is responsible for closing
+   * the InputStream.
+   */
+  def getRaw(): Future[InputStream] = {
+    if (path.isEmpty) {
+      Future.failed(new IllegalStateException("You can only request content if a path is specified."))
+    } else {
+      val contentRequestBuilder = baseRequest / "raw" / path.getOrElse("")
+
+      runRaw(contentRequestBuilder)
     }
   }
 }

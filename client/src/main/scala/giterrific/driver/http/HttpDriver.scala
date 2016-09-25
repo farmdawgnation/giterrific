@@ -16,6 +16,7 @@
  */
 package giterrific.driver.http
 
+import java.io.InputStream
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
@@ -37,5 +38,6 @@ trait HttpReq[UnderlyingType <: HttpReq[UnderlyingType]] {
  */
 trait HttpDriver[ReqType <: HttpReq[_]] {
   def run(request: ReqType)(implicit ec: ExecutionContext): Future[String]
+  def runRaw(request: ReqType)(implicit ec: ExecutionContext): Future[InputStream]
   def url(url: String): ReqType
 }

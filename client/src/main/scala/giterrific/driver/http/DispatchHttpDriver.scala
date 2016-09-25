@@ -16,6 +16,9 @@
  */
 package giterrific.driver.http
 
+import com.ning.http.client.Response
+import java.util.concurrent.ExecutionException
+import java.io.InputStream
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
@@ -40,5 +43,20 @@ case class DispatchHttpDriver() extends HttpDriver[DispatchHttpReq] {
 
   def run(request: DispatchHttpReq)(implicit ec: ExecutionContext): Future[String] = {
     dispatch.Http(request.underlyingReq OK dispatch.as.String)
+  }
+
+  def runRaw(request: DispatchHttpReq)(implicit ec: ExecutionContext): Future[InputStream] = {
+    dispatch.Http(request.underlyingReq).flatMap { result =>
+      if (result.getStatusCode() == 200) {
+        Future.successful(result.getResponseBodyAsStream())
+      } else {
+        val statusCode = result.getStatusCode()
+        val body = result.getResponseBody()
+
+        Future.failed(new ExecutionException(
+          new RuntimeException("Got status code $statusCode and response: $body")
+        ))
+      }
+    }
   }
 }
