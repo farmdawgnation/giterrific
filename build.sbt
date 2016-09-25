@@ -31,6 +31,12 @@ lazy val playws24 =
     .settings(Defaults.itSettings: _*)
     .dependsOn(client % "compile->compile;it->it")
 
+lazy val finagle =
+  (project in file("extras/finagle"))
+    .configs(IntegrationTest)
+    .settings(Defaults.itSettings: _*)
+    .dependsOn(client % "compile->compile;it->it")
+
 lazy val giterrific =
   (project in file("."))
     .settings(unidocSettings: _*)
