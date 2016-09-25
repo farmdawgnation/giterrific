@@ -94,5 +94,13 @@ class Boot extends Loggable {
         ))
       )
     }
+
+
+    LiftRules.supplementalHeaders.default.set(
+      List(
+        ("X-Lift-Version", LiftRules.liftVersion),
+        ("Access-Control-Allow-Origin", "*")
+      )
+    )
   }
 }
