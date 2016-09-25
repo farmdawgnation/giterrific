@@ -17,6 +17,7 @@
 package giterrific
 package api
 
+import giterrific.core._
 import giterrific.git._
 import giterrific.git.JGitWrappers._
 import giterrific.server.BuildInfo
@@ -64,7 +65,15 @@ object ApiV1 extends RestHelper with Loggable {
               ref <- getRef(repo, commitRef)
               commit <- getCommit(revwalk, ref)
             } yield {
-              decompose(toCommitSummary(revwalk, commit, skip, maxCount))
+              val commits = toCommitSummary(revwalk, commit, skip, maxCount)
+
+              decompose(RepositoryCommitSummaryPage(
+                ref = commitRef,
+                totalCommitCount = countCommitsInTree(revwalk, commit),
+                skip = skip,
+                maxCount = maxCount,
+                commits = commits.toList
+              ))
             }
           }
 

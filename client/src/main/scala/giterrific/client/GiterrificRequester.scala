@@ -131,8 +131,8 @@ class GiterrificRequester[ReqType <: HttpReq[ReqType]](
    * @param skip The number of commits to skip when generating the summary. Defaults to 0.
    * @param maxCount The number of commits to return when generating the summary. Defaults to 20.
    */
-  def getCommits(skip: Int = 0, maxCount: Int = 20): Future[List[RepositoryCommitSummary]] = {
-    run[List[RepositoryCommitSummary]](baseRequest.withQuery(Map(
+  def getCommits(skip: Int = 0, maxCount: Int = 20): Future[RepositoryCommitSummaryPage] = {
+    run[RepositoryCommitSummaryPage]  (baseRequest.withQuery(Map(
       "skip" -> skip.toString,
       "maxCount" -> maxCount.toString
     )))

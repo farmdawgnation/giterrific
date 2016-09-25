@@ -32,26 +32,32 @@ trait ClientSpec[ReqType <: HttpReq[ReqType]] extends AsyncFeatureSpec with Give
 
     scenario("Refers to a valid ref") {
       val expectedJson = """
-      |[
-      |  {
-      |    "sha":"558faad4023f2690e35c8fd234666408223a4301",
-      |    "author":{
-      |      "date":"2016-08-20T19:44:35Z",
-      |      "name":"Matt Farmer",
-      |      "email":"matt@frmr.me"
-      |    },
-      |    "committer":{
-      |      "date":"2016-08-20T19:44:35Z",
-      |      "name":"Matt Farmer",
-      |      "email":"matt@frmr.me"
-      |    },
-      |    "message":"Initial checking\n"
-      |  }
-      |]
+      |{
+      |  "ref": "master",
+      |  "skip": 0,
+      |  "maxCount": 20,
+      |  "totalCommitCount": 1,
+      |  "commits": [
+      |    {
+      |      "sha":"558faad4023f2690e35c8fd234666408223a4301",
+      |      "author":{
+      |        "date":"2016-08-20T19:44:35Z",
+      |        "name":"Matt Farmer",
+      |        "email":"matt@frmr.me"
+      |      },
+      |      "committer":{
+      |        "date":"2016-08-20T19:44:35Z",
+      |        "name":"Matt Farmer",
+      |        "email":"matt@frmr.me"
+      |      },
+      |      "message":"Initial checking\n"
+      |    }
+      |  ]
+      |}
       |""".stripMargin
 
       testClient.repo("test.git").withRef("master").getCommits().map { result =>
-        assert(parse(expectedJson).extract[List[RepositoryCommitSummary]] == result)
+        assert(parse(expectedJson).extract[RepositoryCommitSummaryPage] == result)
       }
     }
   }
