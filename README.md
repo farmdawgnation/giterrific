@@ -86,7 +86,7 @@ trivial to provide your own if you choose to do so.
 To use the client in your project, add the following to your `build.sbt` file:
 
 ```scala
-libraryDependencies += "me.frmr.giterrific" %% "giterrific-client" % "0.1.0"
+libraryDependencies += "me.frmr.giterrific" %% "giterrific-client" % "0.2.0"
 
 // Only if you want to use our default HTTP implementation
 libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.11.2"
@@ -99,7 +99,7 @@ following to your `build.sbt`:
 resolvers +=
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
-libraryDependencies += "me.frmr.giterrific" %% "giterrific-client" % "0.2.0-SNAPSHOT"
+libraryDependencies += "me.frmr.giterrific" %% "giterrific-client" % "0.3.0-SNAPSHOT"
 
 // Only if you want to use our default HTTP implementation
 libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.11.2"
