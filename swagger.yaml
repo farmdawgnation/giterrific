@@ -64,9 +64,7 @@ paths:
         200:
           description: An array of commit summaries.
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/RepositoryCommitSummary'
+            $ref: '#/definitions/RepositoryCommitSummaryPage'
         default:
           description: An unexpected error
 
@@ -228,6 +226,26 @@ definitions:
       message:
         type: string
         description: The message associated with the commit.
+
+  RepositoryCommitSummaryPage:
+    type: object
+    properties:
+      ref:
+        type: string
+        description: The ref that this commit summary page is browsing.
+      totalCommitCount:
+        type: number
+        description: The total number of commits on this ref.
+      skip:
+        type: number
+        description: The number of commits skipped before the start of this page.
+      maxCount:
+        type: number
+        description: The maximum count requested per page.
+      commits:
+        type: array
+        items:
+          $ref: '#/definitions/RepositoryCommitSummary'
 
   RepositoryFileSummary:
     type: object
