@@ -19,7 +19,7 @@ consumes:
 produces:
   - application/json
   - text/plain
-host: "giterrific:8080"
+host: "localhost:8080"
 
 parameters:
   repo:
