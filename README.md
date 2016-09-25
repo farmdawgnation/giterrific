@@ -29,26 +29,22 @@ about your projects.
 
 To take advantage of Giterrific you'll have to launch a Giterrific server.
 
-The easiest way to use Giterrific Server is the Docker image. You can run it as follows:
+The easiest way to use Giterrific Server is the Docker image. You can run the latest stable as
+follows:
 
 ```
 docker run -p 8080:8080 -v /path/to/repos:/opt/giterrific/repos farmdawgnation/giterrific
 ```
 
-This will boot a working Giterrific server that serves information about your git repositories.
-After this is up and running you can start making calls against the endpoints that the server
-exposes:
+If you're interested, instead, in booting the latest snapshot just add `:snapshot` to the end of
+that command to pull the snapshot tag.
 
-* `/api/v1/repos/:path/commits/:ref` - List the commits starting at a particular ref.
-  * `:path` - Path to the repository relative to the repos root. Should end in `.git`
-  * `:ref` - The ref (branch name, commit sha, etc) to list commits from.
-* `/api/v1/repos/:path/commits/:ref/tree[/path/to/subfolders]` - List the contents of folders.
-  * If no subfolder path is provided it lists the contents of the root of the repo's working
-    directory.
-* `/api/v1/repos/:path/commits/:ref/contents/[path/to/file]` - Retrieve the content summary of a file.
-  * The path must reference exactly one file.
-* `/api/v1/repos/:path/commits/:ref/raw/[path/to/file]` - Retrieve the raw file at the path.
-  * For files of a certain size, this is the only way to retrieve their content.
+This will boot a working Giterrific server that serves information about your git repositories.
+
+Since 0.2.0, Giterrific's REST API is documented with [Swagger](https://swagger.io). You can find
+a copy of Swagger UI pointed at our Swagger file [on the github pages site](http://github.frmr.me/giterrific/swagger/).
+If you have a copy of 0.2.0 or higher running on Docker locally, you can even use the Swagger UI
+to test the API calls yourself directly from your browser.
 
 ### Versioning
 
