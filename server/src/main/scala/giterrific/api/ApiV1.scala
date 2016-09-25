@@ -108,11 +108,11 @@ object ApiV1 extends RestHelper with Loggable {
                 // entire path from the request itself and drop the prefix.
                 wholePath = req.path.wholePath.drop(3)
                 parentDirectory = filePath.dropRight(1)
-                fileName <- wholePath.takeRight(1).headOption
+                fileName <- (wholePath.takeRight(1).headOption: Box[String])
 
                 _ = navigateTreeToPath(treeWalk, parentDirectory)
                 _ = filterTreeToFile(treeWalk, fileName)
-                contents <- toFileContent(treeWalk)
+                contents <- toFileContent(treeWalk) ~> 400
               } yield {
                 decompose(contents)
               }
