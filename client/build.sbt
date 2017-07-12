@@ -6,6 +6,8 @@ version := GiterrificKeys.version
 
 scalaVersion := GiterrificKeys.primaryScalaVersion
 
+crossScalaVersions := Seq("2.11.11", "2.12.2")
+
 scalacOptions ++= GiterrificKeys.defaultScalacOptions
 
 libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.13.1" % "provided,it"
