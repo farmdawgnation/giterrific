@@ -16,7 +16,7 @@
  */
 package giterrific.driver.http
 
-import com.ning.http.client.Response
+import org.asynchttpclient.Response
 import java.util.concurrent.ExecutionException
 import java.io.InputStream
 import scala.concurrent.{ExecutionContext, Future}
