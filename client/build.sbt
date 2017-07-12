@@ -6,11 +6,11 @@ version := GiterrificKeys.version
 
 scalaVersion := GiterrificKeys.primaryScalaVersion
 
-scalacOptions ++= GiterrificKeys.defaultScalacOptions 
+scalacOptions ++= GiterrificKeys.defaultScalacOptions
 
 libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.11.2" % "provided,it"
 
-libraryDependencies += "net.liftweb" %% "lift-json" % "3.0-RC3"
+libraryDependencies += "net.liftweb" %% "lift-json" % "3.1.0"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "it"
 
