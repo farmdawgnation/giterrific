@@ -26,7 +26,6 @@ import sitemap._
 import Loc._
 import json._
 import json.JsonDSL._
-import net.liftmodules.JQueryModule
 import net.liftweb.http.js.jquery._
 import net.liftweb.util._
 import net.liftweb.util.Helpers._
@@ -81,10 +80,7 @@ class Boot extends Loggable {
       case response => response
     }
 
-    //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts
-    JQueryModule.InitParam.JQuery=JQueryModule.JQuery1113
-    JQueryModule.init()
 
     LiftRules.securityRules = () => {
       SecurityRules(
