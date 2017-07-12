@@ -154,5 +154,5 @@ From now on methods that are based on this client will use your custom HTTP driv
 
 ## About the Author
 
-My name is Matt Farmer. By day I write code for [Domino Data Lab](https://dominodatalab.com).
+My name is Matt Farmer. By day I write code for [MailChimp](https://mailchimp.com).
 By night, I contribute to various open source projects when I'm not binging something on Netflix.
