@@ -12,7 +12,7 @@ libraryDependencies += "net.databinder.dispatch" %% "dispatch-core" % "0.11.2" %
 
 libraryDependencies += "net.liftweb" %% "lift-json" % "3.1.0"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "it"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "it"
 
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
