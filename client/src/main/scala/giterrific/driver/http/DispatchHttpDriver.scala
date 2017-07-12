@@ -42,11 +42,11 @@ case class DispatchHttpDriver() extends HttpDriver[DispatchHttpReq] {
   def url(url: String): DispatchHttpReq = DispatchHttpReq(dispatch.url(url))
 
   def run(request: DispatchHttpReq)(implicit ec: ExecutionContext): Future[String] = {
-    dispatch.Http(request.underlyingReq OK dispatch.as.String)
+    dispatch.Http.default(request.underlyingReq OK dispatch.as.String)
   }
 
   def runRaw(request: DispatchHttpReq)(implicit ec: ExecutionContext): Future[InputStream] = {
-    dispatch.Http(request.underlyingReq).flatMap { result =>
+    dispatch.Http.default(request.underlyingReq).flatMap { result =>
       if (result.getStatusCode() == 200) {
         Future.successful(result.getResponseBodyAsStream())
       } else {
