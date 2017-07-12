@@ -19,7 +19,7 @@ package giterrific.git
 import java.io.InputStream
 import java.lang.AutoCloseable
 import scala.collection._
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import giterrific.core._
 import net.liftweb.common._
@@ -183,7 +183,7 @@ object JGitWrappers {
     walker.markStart(startCommit)
     walker.setRevFilter(revFilter)
 
-    for (commit <- walker.iterator().toSeq) yield {
+    for (commit <- walker.iterator().asScala.toSeq) yield {
       val author = commit.getAuthorIdent()
       val committer = commit.getCommitterIdent()
 
