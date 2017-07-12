@@ -16,7 +16,7 @@
  */
 object GiterrificKeys {
   lazy val version = "0.3.0-SNAPSHOT"
-  lazy val primaryScalaVersion = "2.11.7"
+  lazy val primaryScalaVersion = "2.12.2"
   lazy val defaultScalacOptions = Seq(
     "-feature",
     "-deprecation"
