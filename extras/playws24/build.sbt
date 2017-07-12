@@ -4,9 +4,9 @@ organization := "me.frmr.giterrific.extras"
 
 version := GiterrificKeys.version
 
-scalaVersion := GiterrificKeys.primaryScalaVersion
+scalaVersion := "2.11.11"
 
-scalacOptions ++= GiterrificKeys.defaultScalacOptions 
+scalacOptions ++= GiterrificKeys.defaultScalacOptions
 
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
@@ -18,7 +18,7 @@ publishTo <<= version { (v: String) =>
 
 credentials += Credentials(Path.userHome / ".sonatype")
 
-libraryDependencies += "com.typesafe.play" %% "play-ws" % "2.4.8" % "provided"
+libraryDependencies += "com.typesafe.play" %% "play-ws" % "2.4.11" % "provided"
 
 pomExtra :=
 <url>https://github.com/farmdawgnation/giterrific</url>
