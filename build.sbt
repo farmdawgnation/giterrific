@@ -29,6 +29,12 @@ lazy val playws24 =
   (project in file("extras/playws24"))
     .configs(IntegrationTest)
     .settings(Defaults.itSettings: _*)
+  .dependsOn(client % "compile->compile;it->it")
+
+lazy val playws26 =
+  (project in file("extras/playws26"))
+    .configs(IntegrationTest)
+    .settings(Defaults.itSettings: _*)
     .dependsOn(client % "compile->compile;it->it")
 
 lazy val finagle =
