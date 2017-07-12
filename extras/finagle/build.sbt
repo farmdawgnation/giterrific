@@ -18,7 +18,7 @@ publishTo <<= version { (v: String) =>
 
 credentials += Credentials(Path.userHome / ".sonatype")
 
-libraryDependencies += "com.twitter" %% "finagle-http" % "6.38.0" % "provided"
+libraryDependencies += "com.twitter" %% "finagle-http" % "6.45.0" % "provided"
 
 pomExtra :=
 <url>https://github.com/farmdawgnation/giterrific</url>
